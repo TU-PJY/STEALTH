@@ -2,6 +2,7 @@
 
 in vec3 fragPos; // 정점 셰이더로부터 전달받은 정점 위치
 in vec3 normal;  // 정점 셰이더로부터 전달받은 법선 벡터
+in vec2 TexCoord;
 
 out vec4 fragColor; // 최종 출력 색상
 
@@ -10,9 +11,12 @@ uniform vec3 viewPos;     // 카메라 위치
 uniform vec3 lightColor;
 uniform vec3 objectColor;
 
+uniform sampler2D outTexture; //--- texture sampler outTexture1
+
+
 void main() {
     // 앰비언트
-    float ambientLight = 0.3;
+    float ambientLight = 0.7;
     vec3 ambient = ambientLight * lightColor;
     
     // 빛의 방향 계산
@@ -36,5 +40,5 @@ void main() {
     vec3 result = (ambient + diffuse + specular) * objectColor;
 
     // 최종 출력 색상 설정
-    fragColor = vec4(result, 1.0);
+    fragColor = vec4(result, 1.0f);// * texture(outTexture, TexCoord);
 }

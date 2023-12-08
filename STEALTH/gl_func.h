@@ -4,7 +4,8 @@
 #include "config.h"
 
 void keyDown(unsigned char KEY, int x, int y);
-void keyUp(unsigned char KEY, int x, int y);
+void specialKeyDown(int KEY, int x, int y);
+void specialKeyUp(int KEY, int x, int y);
 void timerOperation(int value);
 
 #endif

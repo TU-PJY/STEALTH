@@ -3,7 +3,7 @@
 #include "model.h"
 
 vector<Vertex> model_1;  // 모델 여러 종류 추가 시 model_2, model_3... 식으로 벡터 추가
-GLuint vertexCount_1 = loadObj("..//res//model//Dassault_Mirage-4000.obj", model_1);  // 모델 여러 종류 추가 시 vertexCount_2, vertexCount_3... 식으로 추가
+GLuint vertexCount_1 = loadObj("..//res//model//stealth.obj", model_1);  // 모델 여러 종류 추가 시 vertexCount_2, vertexCount_3... 식으로 추가
 // model.h에도 동일하게 추가해야함
 
 GLuint VAO[MODEL_COUNT], VBO;  // MODEL_COUNT는 config.h에 정의되어있음

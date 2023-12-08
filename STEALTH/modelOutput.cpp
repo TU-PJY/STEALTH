@@ -12,6 +12,8 @@ glm::mat4 transformMatrix, view, projection, lightMatrix, scaleMatrix, rotateMat
 unsigned int projectionLocation, viewLocation, modelLocation, viewPosLocation;
 unsigned int lightPosLocation, lightColorLocation, objColorLocation;
 
+GLfloat rot;  // 전투기 회전 각도
+
 
 void finishTransform(int idx) {  // 변환 전달 
 	projectionLocation = glGetUniformLocation(ID, "projection");
@@ -41,7 +43,7 @@ void finishTransform(int idx) {  // 변환 전달
 void setCamera() {  // 카메라 세팅
 	using namespace glm;
 	view = mat4(1.0f);
-	cameraPos = vec3(0.0f, 0.0f, 50.0f);
+	cameraPos = vec3(0.0f, 0.0f, 30.0f);
 	cameraDirection = vec3(0.0f, 0.0f, 0.0f);
 	cameraUp = vec3(0.0f, 1.0f, 0.0f);
 	view = lookAt(cameraPos, cameraDirection, cameraUp);
@@ -80,8 +82,9 @@ void setTransform(int idx) {  // 변환 세팅
 	translateMatrix = mat4(1.0f);  // 이동 행렬
 
 	switch (idx) {  // 변환 추가 
-	case 0:
-
+	case 0:  // 전투기 변환
+		translateMatrix = translate(translateMatrix, vec3(0.0, -5.0, 0.0));  // 화면 하단에 위치해야 하므로 y축으로 -5.0만큼 이동
+		translateMatrix = rotate(translateMatrix, radians(rot), vec3(0.0, 0.0, 1.0));  // 제자리 회전
 		objColor = vec3(0.5, 0.5, 0.5);
 		break;
 	}
@@ -91,7 +94,7 @@ void setTransform(int idx) {  // 변환 세팅
 
 void modelOutput(int idx) {  // 모델 출력 
 	switch (idx) {
-	case 0:
+	case 0:  // 전투기 출력
 		glDrawArrays(GL_TRIANGLES, 0, model_1.size());
 		break;
 	}
