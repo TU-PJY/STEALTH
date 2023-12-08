@@ -4,5 +4,6 @@
 void timerOperation(int value) {
 
 	glutTimerFunc(10, timerOperation, 1);
-	glutPostRedisplay();
+	if (glutGetWindow() != 0)
+		glutPostRedisplay();
 }
