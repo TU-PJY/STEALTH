@@ -3,9 +3,13 @@
 #include "buffer.h"  // 버퍼
 #include "translate.h"  // 변환
 #include "gl_func.h"  // GL 기능 함수
+#include "screen.h"
 
 extern GLuint ID;
 int projectionMode = modePers;  // 직각투영/원근투영, 기본 원근투영 모드, modeOrtho로 변경 시 알아서 바뀜
+
+int WIDTH = GetSystemMetrics(SM_CXSCREEN);
+int HEIGHT = GetSystemMetrics(SM_CYSCREEN);  // 화면 사이즈에 맞추어 창을 출력한다
 
 GLvoid displayOutput() {
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -37,6 +41,8 @@ void main(int argc, char** argv) {
 		glutInitWindowPosition(X_POS, Y_POS);
 		glutInitWindowSize(WIDTH, HEIGHT);
 		glutCreateWindow("OpenGL");
+		glutFullScreen();  // 전체화면으로 전환한다
+
 		glewExperimental = GL_TRUE;
 		if (glewInit() != GLEW_OK) {
 			cerr << "Unable to initialize GLEW" << endl;  exit(EXIT_FAILURE);

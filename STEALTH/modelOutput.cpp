@@ -1,6 +1,7 @@
 ﻿// 모델 변환 
 #include "translate.h"
 #include "model.h"
+#include "screen.h"
 
 extern GLuint ID;
 extern GLuint VAO[MODEL_COUNT];  // MODEL_COUNT는 config.h에 정의되어있음

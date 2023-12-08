@@ -25,7 +25,7 @@ void main() {
     float diff = max(dot(normalVector, lightDir), 0.0);
     vec3 diffuse = lightColor * diff;
 
-    int shininess = 128;
+    int shininess = 4;
     // 스페큘러 조명 계산
     vec3 viewDir = normalize(viewPos - fragPos);
     vec3 reflectDir = reflect(-lightDir, normalVector);

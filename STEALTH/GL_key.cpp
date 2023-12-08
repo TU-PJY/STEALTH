@@ -12,10 +12,10 @@ void keyDown(unsigned char KEY, int x, int y) {
 }
 
 void keyUp(unsigned char KEY, int x, int y) {
-	switch (KEY) {
+	/*switch (KEY) {
 	case 0:
 		break;
-	}
+	}*/
 	if (glutGetWindow() != 0)
 		glutPostRedisplay();
 }

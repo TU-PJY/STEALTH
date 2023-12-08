@@ -17,11 +17,12 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <windows.h>
 
-#define WIDTH 1500
-#define HEIGHT 800
-#define X_POS 100
-#define Y_POS 50
+//#define WIDTH 1500
+//#define HEIGHT 800
+#define X_POS 0
+#define Y_POS 0
 
 using namespace std;
 
