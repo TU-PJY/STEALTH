@@ -147,6 +147,7 @@
     <ClInclude Include="model.h" />
     <ClInclude Include="screen.h" />
     <ClInclude Include="shader.h" />
+    <ClInclude Include="texture.h" />
     <ClInclude Include="translate.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
