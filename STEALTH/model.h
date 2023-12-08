@@ -10,4 +10,6 @@ struct Vertex {
 GLuint loadObj(const char* filename, vector<Vertex>& vertices);
 
 extern vector<Vertex> model_1;
+extern vector<Vertex> model_2;
 extern GLuint vertexCount_1;
+extern GLuint vertexCount_2;

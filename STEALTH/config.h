@@ -29,7 +29,7 @@
 
 using namespace std;
 
-#define MODEL_COUNT 1
+#define MODEL_COUNT 2
 
 enum projectionMode {  // 원근 투영 / 직각 투영. 기본 원근 투영 
 	modeOrtho, modePers

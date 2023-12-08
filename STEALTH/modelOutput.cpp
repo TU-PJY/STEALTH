@@ -67,7 +67,7 @@ void setProjection(int projectionMode) {  // 투영 세팅
 void setLight() {  // 조명 세팅
 	using namespace glm;
 	lightMatrix = mat4(1.0f);
-	lightPos = vec3(0.0f, 0.0f, 50.0f);  // 조명 위치
+	lightPos = vec3(0.0f, 100.0f, 100.0f);  // 조명 위치
 	// 여기에 빛 변환 추가
 
 	vec3 initialLightPos = vec3(lightPos.x, lightPos.y, lightPos.z);
@@ -88,6 +88,11 @@ void setTransform(int idx) {  // 변환 세팅
 		translateMatrix = rotate(translateMatrix, radians(rot), vec3(0.0, 0.0, 1.0));  // 제자리 회전
 		objColor = vec3(0.5, 0.5, 0.5);
 		break;
+
+	case 1:  // 배경
+		translateMatrix = translate(translateMatrix, vec3(0.0, 0.0, -50.0));
+		translateMatrix = scale(translateMatrix, vec3(10.0, 10.0, 0.1));
+		break;
 	}
 
 	transformMatrix = scaleMatrix * rotateMatrix * translateMatrix;  // 최종 변환
@@ -98,6 +103,10 @@ void modelOutput(int idx) {  // 모델 출력
 	case 0:  // 전투기 출력
 		glBindTexture(GL_TEXTURE_2D, texture[0]);
 		glDrawArrays(GL_TRIANGLES, 0, model_1.size());
+		break;
+	case 1:  // 배경 출력
+		glBindTexture(GL_TEXTURE_2D, texture[1]);
+		glDrawArrays(GL_TRIANGLES, 0, model_2.size());
 		break;
 	}
 }

@@ -4,8 +4,11 @@
 #include "texture.h"
 
 vector<Vertex> model_1;  // 모델 여러 종류 추가 시 model_2, model_3... 식으로 벡터 추가
+vector<Vertex> model_2;
+
 GLuint vertexCount_1 = loadObj("..//res//model//stealth.obj", model_1);  // 모델 여러 종류 추가 시 vertexCount_2, vertexCount_3... 식으로 추가
 // model.h에도 동일하게 추가해야함
+GLuint vertexCount_2 = loadObj("..//res//model//front.obj", model_2);
 
 GLuint VAO[MODEL_COUNT], VBO;  // MODEL_COUNT는 config.h에 정의되어있음
 BITMAPINFO* bmp;
@@ -17,6 +20,9 @@ void vertexInput(int idx) {  // vertex
 	switch (idx) {
 	case 0:
 		glBufferData(GL_ARRAY_BUFFER, model_1.size() * sizeof(Vertex), model_1.data(), GL_STATIC_DRAW);
+		break;
+	case 1:
+		glBufferData(GL_ARRAY_BUFFER, model_2.size() * sizeof(Vertex), model_2.data(), GL_STATIC_DRAW);
 		break;
 	}
 }
@@ -99,5 +105,14 @@ void setTexture() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	texture_data = LoadDIBitmap("..//res//texture//texture_stealth.bmp", &bmp);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, 1024, 1024, 0, GL_BGR, GL_UNSIGNED_BYTE, texture_data);
+
+	glGenTextures(1, &texture[1]);
+	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	texture_data = LoadDIBitmap("..//res//texture//texture_sky.bmp", &bmp);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, 1024, 512, 0, GL_BGR, GL_UNSIGNED_BYTE, texture_data);
 }
 
