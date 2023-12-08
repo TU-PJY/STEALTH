@@ -2,6 +2,7 @@
 #include "translate.h"
 #include "model.h"
 #include "screen.h"
+#include "texture.h"
 
 extern GLuint ID;
 extern GLuint VAO[MODEL_COUNT];  // MODEL_COUNT는 config.h에 정의되어있음
@@ -95,6 +96,7 @@ void setTransform(int idx) {  // 변환 세팅
 void modelOutput(int idx) {  // 모델 출력 
 	switch (idx) {
 	case 0:  // 전투기 출력
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
 		glDrawArrays(GL_TRIANGLES, 0, model_1.size());
 		break;
 	}

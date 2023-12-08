@@ -11,7 +11,8 @@ uniform vec3 viewPos;     // 카메라 위치
 uniform vec3 lightColor;
 uniform vec3 objectColor;
 
-uniform sampler2D outTexture; //--- texture sampler outTexture1
+uniform sampler2D outTexture1; //--- texture sampler outTexture1 
+uniform sampler2D outTexture2; //--- texture sampler outTexture2
 
 
 void main() {
@@ -40,5 +41,5 @@ void main() {
     vec3 result = (ambient + diffuse + specular) * objectColor;
 
     // 최종 출력 색상 설정
-    fragColor = vec4(result, 1.0f);// * texture(outTexture, TexCoord);
+    fragColor = vec4(result, 1.0f) * (texture (outTexture1, TexCoord) + texture (outTexture2, TexCoord) ) / 2.0;
 }

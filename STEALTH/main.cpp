@@ -57,6 +57,7 @@ void main(int argc, char** argv) {
 	// MODEL_COUNT는 config.h에 정의되어있음
 	for(int i = 0; i < MODEL_COUNT; i ++)  // MODEL_COUNT 만큼 버퍼 초기화
 		setBuffer(i);  // modelBuffer.cpp에 있음
+	setTexture();
 	
 	glutDisplayFunc(displayOutput);
 	glutReshapeFunc(displayReshape);

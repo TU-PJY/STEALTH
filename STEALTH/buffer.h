@@ -5,5 +5,6 @@
 
 void setBuffer(int idx);
 void vertexInput(int idx);
+void setTexture();
 
 #endif
