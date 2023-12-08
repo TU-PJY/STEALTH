@@ -5,14 +5,72 @@
 
 vector<Vertex> model_1;  // 모델 여러 종류 추가 시 model_2, model_3... 식으로 벡터 추가
 vector<Vertex> model_2;
+vector<Vertex> model_3;
 
 GLuint vertexCount_1 = loadObj("..//res//model//stealth.obj", model_1);  // 모델 여러 종류 추가 시 vertexCount_2, vertexCount_3... 식으로 추가
-// model.h에도 동일하게 추가해야함
 GLuint vertexCount_2 = loadObj("..//res//model//front.obj", model_2);
+GLuint vertexCount_3 = loadObj("..//res//model//front.obj", model_3);
+
+GLfloat vertexData[][48] = {
+	// 앞
+	{
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0, 0.0,
+		0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0, 0.0,
+		0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0, 1.0,
+		0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0, 1.0,
+		-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0, 1.0,
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0, 0.0
+	},
+	// 뒤
+	{
+		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0, 0.0,
+		0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0, 0.0,
+		0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0, 1.0,
+		0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0, 1.0,
+		-0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0, 1.0,
+		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0, 0.0
+	},
+	// 오
+	{
+		0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0, 0.0,
+		0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0, 0.0,
+		0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0, 1.0,
+		0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0, 1.0,
+		0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0, 1.0,
+		0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0, 0.0
+	},
+	// 왼
+	{
+		-0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 0.0, 0.0,
+		-0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 1.0, 0.0,
+		-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 1.0, 1.0,
+		-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 1.0, 1.0,
+		-0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 0.0, 1.0,
+		-0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 0.0, 0.0
+	},
+	// 아래
+	{
+		-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0, 0.0,
+		0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 1.0, 0.0,
+		0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0, 1.0,
+		0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0, 1.0,
+		-0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 0.0, 1.0,
+		-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0, 0.0
+	},
+	// 위
+	{
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0, 0.0,
+		0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0, 0.0,
+		0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0, 1.0,
+		0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0, 1.0,
+		-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0, 1.0,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0, 0.0
+	}
+};
 
 GLuint VAO[MODEL_COUNT], VBO;  // MODEL_COUNT는 config.h에 정의되어있음
 BITMAPINFO* bmp;
-unsigned int texture[2];
+unsigned int texture[5];
 unsigned char* texture_data;
 
 
@@ -24,7 +82,13 @@ void vertexInput(int idx) {  // vertex
 	case 1:
 		glBufferData(GL_ARRAY_BUFFER, model_2.size() * sizeof(Vertex), model_2.data(), GL_STATIC_DRAW);
 		break;
+	case 2:
+		glBufferData(GL_ARRAY_BUFFER, model_2.size() * sizeof(Vertex), model_3.data(), GL_STATIC_DRAW);
+		break;
 	}
+
+	if(3 <= idx && idx <= 24)  // 장애물 및 절벽
+		glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 }
 
 void setBuffer(int idx) {
@@ -35,12 +99,22 @@ void setBuffer(int idx) {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	vertexInput(idx);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position)));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, normal)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); //--- 텍스처 좌표 속성 
-	glEnableVertexAttribArray(2);
+	if (idx < 3) {  // 전투기, 배경, 땅
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position)));
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, normal)));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); //--- 텍스처 좌표 속성 
+		glEnableVertexAttribArray(2);
+	}
+	else {  // 장애물
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)0); // 위치 속성
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat))); // 노말 속성
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); //--- 텍스처 좌표 속성 
+		glEnableVertexAttribArray(2);
+	}
 }
 
 GLubyte* LoadDIBitmap(const char* filename, BITMAPINFO** info)
@@ -113,6 +187,33 @@ void setTexture() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	texture_data = LoadDIBitmap("..//res//texture//texture_sky.bmp", &bmp);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, 1024, 512, 0, GL_BGR, GL_UNSIGNED_BYTE, texture_data);
+
+	glGenTextures(1, &texture[2]);
+	glBindTexture(GL_TEXTURE_2D, texture[2]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	texture_data = LoadDIBitmap("..//res//texture//texture_land.bmp", &bmp);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, 380, 380, 0, GL_BGR, GL_UNSIGNED_BYTE, texture_data);
+
+	glGenTextures(1, &texture[3]);
+	glBindTexture(GL_TEXTURE_2D, texture[3]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	texture_data = LoadDIBitmap("..//res//texture//texture_pillar.bmp", &bmp);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, 1024, 512, 0, GL_BGR, GL_UNSIGNED_BYTE, texture_data);
+
+	glGenTextures(1, &texture[4]);
+	glBindTexture(GL_TEXTURE_2D, texture[4]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	texture_data = LoadDIBitmap("..//res//texture//texture_cliff.bmp", &bmp);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, 1024, 512, 0, GL_BGR, GL_UNSIGNED_BYTE, texture_data);
 }
 

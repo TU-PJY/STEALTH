@@ -145,6 +145,7 @@
     <ClInclude Include="config.h" />
     <ClInclude Include="gl_func.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="pillar.h" />
     <ClInclude Include="screen.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="texture.h" />

@@ -18,9 +18,11 @@
 #include <gl/freeglut_ext.h>
 #include <iostream>
 #include <vector>
+#include <random>
 #include <fstream>
 #include <sstream>
 #include <windows.h>
+#include <cmath>
 
 //#define WIDTH 1500
 //#define HEIGHT 800
@@ -29,7 +31,7 @@
 
 using namespace std;
 
-#define MODEL_COUNT 2
+#define MODEL_COUNT 25
 
 enum projectionMode {  // 원근 투영 / 직각 투영. 기본 원근 투영 
 	modeOrtho, modePers

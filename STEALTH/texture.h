@@ -1,2 +1,2 @@
 #pragma once
-extern unsigned int texture[2];
+extern unsigned int texture[5];
