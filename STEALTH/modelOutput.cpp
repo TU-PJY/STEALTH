@@ -13,7 +13,7 @@ unsigned int projectionLocation, viewLocation, modelLocation, viewPosLocation;
 unsigned int lightPosLocation, lightColorLocation, objColorLocation;
 
 GLfloat rot;  // 전투기 회전 각도
-
+GLfloat sx;  // 전투기 좌우 위치
 
 void finishTransform(int idx) {  // 변환 전달 
 	projectionLocation = glGetUniformLocation(ID, "projection");
@@ -83,7 +83,7 @@ void setTransform(int idx) {  // 변환 세팅
 
 	switch (idx) {  // 변환 추가 
 	case 0:  // 전투기 변환
-		translateMatrix = translate(translateMatrix, vec3(0.0, -5.0, 0.0));  // 화면 하단에 위치해야 하므로 y축으로 -5.0만큼 이동
+		translateMatrix = translate(translateMatrix, vec3(sx, -5.0, 0.0));  // 화면 하단에 위치해야 하므로 y축으로 -5.0만큼 이동
 		translateMatrix = rotate(translateMatrix, radians(rot), vec3(0.0, 0.0, 1.0));  // 제자리 회전
 		objColor = vec3(0.5, 0.5, 0.5);
 		break;

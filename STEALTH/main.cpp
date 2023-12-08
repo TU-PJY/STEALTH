@@ -63,7 +63,6 @@ void main(int argc, char** argv) {
 	glutKeyboardFunc(keyDown);
 	glutSpecialFunc(specialKeyDown);
 	glutSpecialUpFunc(specialKeyUp);
-	//glutKeyboardUpFunc(keyUp);
 	glutTimerFunc(10, timerOperation, 1);
 	glutMainLoop();
 }
