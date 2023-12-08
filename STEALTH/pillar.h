@@ -3,7 +3,8 @@
 
 typedef struct {
 	GLfloat x, z;
-	GLfloat height;
+	GLfloat height, width;
+	int type;
 }Pillar;
 extern Pillar p[20];
 

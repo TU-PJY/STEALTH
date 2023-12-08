@@ -58,15 +58,15 @@ void finishTransform(int idx) {  // 변환 전달
 void setCamera() {  // 카메라 세팅
 	using namespace glm;
 	view = mat4(1.0f);
-	if (!stealthNeeling)
+	if(!stealthNeeling)
 		cameraPos = vec3(0.0f, 10.0f, 40.0f);
 	else
-		cameraPos = vec3(0.0f, 0.0f, 40.0f);
+		cameraPos = vec3(0.0f, -3.0f, 30.0f);
 	cameraDirection = vec3(0.0f, 0.0f, 0.0f);
 	cameraUp = vec3(0.0f, 1.0f, 0.0f);
 	view = lookAt(cameraPos, cameraDirection, cameraUp);
 	view = translate(view, vec3(camMove, camMove2, 0.0));
-	view = rotate(view, radians(camRot), vec3(0.0, 0.0, 1.0));
+	view = rotate(view, radians(-camRot), vec3(0.0, 0.0, 1.0));
 }
 
 void setProjection(int projectionMode) {  // 투영 세팅
@@ -86,7 +86,7 @@ void setProjection(int projectionMode) {  // 투영 세팅
 void setLight() {  // 조명 세팅
 	using namespace glm;
 	lightMatrix = mat4(1.0f);
-	lightPos = vec3(0.0f, 80.0f, 80.0f);  // 조명 위치
+	lightPos = vec3(0.0f, 20.0f, 20.0f);  // 조명 위치
 	// 여기에 빛 변환 추가
 
 	vec3 initialLightPos = vec3(lightPos.x, lightPos.y, lightPos.z);
@@ -112,7 +112,7 @@ void setTransform(int idx) {  // 변환 세팅
 		break;
 
 	case 1:  // 배경
-		translateMatrix = translate(translateMatrix, vec3(0.0, 0.0, -50.0));
+		translateMatrix = translate(translateMatrix, vec3(0.0, 0.0, -80.0));
 		translateMatrix = scale(translateMatrix, vec3(10.0, 10.0, 0.1));
 		break;
 
@@ -122,20 +122,30 @@ void setTransform(int idx) {  // 변환 세팅
 		translateMatrix = rotate(translateMatrix, radians(GLfloat(-90)), vec3(1.0, 0.0, 0.0));
 		break;
 
-	case 23: // 왼쪽 벽
+	case 23: // 왼쪽 절벽
 		translateMatrix = translate(translateMatrix, vec3(-17.0, 0.0, cz - 250));
 		translateMatrix = scale(translateMatrix, vec3(30, 100.0, 500));
 		break;
 
-	case 24: // 오른쪽 벽
+	case 24: // 오른쪽 절벽
 		translateMatrix = translate(translateMatrix, vec3(17.0, 0.0, cz - 250));
 		translateMatrix = scale(translateMatrix, vec3(30, 100.0, 500));
+		break;
+
+	case 25:  // 왼쪽벽
+		translateMatrix = translate(translateMatrix, vec3(-25.0, 0.0, 0.0));
+		translateMatrix = scale(translateMatrix, vec3(30, 100, 500));
+		break;
+
+	case 26:  // 오른쪽벽
+		translateMatrix = translate(translateMatrix, vec3(25.0, 0.0, 0.0));
+		translateMatrix = scale(translateMatrix, vec3(30, 100, 500));
 		break;
 	}
 
 	if (3 <= idx && idx < 3 + num) {  // 장애물
 		translateMatrix = translate(translateMatrix, vec3(p[idx - 3].x, -10.0, p[idx - 3].z));
-		translateMatrix = scale(translateMatrix, vec3(2, p[idx - 3].height, 2));
+		translateMatrix = scale(translateMatrix, vec3(p[idx - 3].width, p[idx - 3].height, 2));
 	}
 
 	transformMatrix = scaleMatrix * rotateMatrix * translateMatrix;  // 최종 변환
@@ -154,16 +164,20 @@ void modelOutput(int idx) {  // 모델 출력
 		break;
 
 	case 2:  // 땅 출력
-		glBindTexture(GL_TEXTURE_2D, texture[2]);
+		glBindTexture(GL_TEXTURE_2D, texture[3]);
 		glDrawArrays(GL_TRIANGLES, 0, model_3.size());
 		break;
 
 	case 23: case 24:
 		if (cliffEnable) {
-			glBindTexture(GL_TEXTURE_2D, texture[4]);
+			glBindTexture(GL_TEXTURE_2D, texture[3]);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 		break;
+
+	case 25: case 26:
+		glBindTexture(GL_TEXTURE_2D, texture[3]);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 
 	if (3 <= idx && idx < 3 + num) {
