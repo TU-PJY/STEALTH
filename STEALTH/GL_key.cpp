@@ -9,10 +9,10 @@ extern GLfloat camY;
 bool bgmPlay, bgmStop;
 bool enginePlay, engineStop;
 bool neelingPlay, neelingStop;
+bool bgmHomePlay, bgmHomeStop;;
 bool cliffPlay;
 int windSoundNum = 0;
 int windSoundNum2 = 0;
-int channelNum = -1;
 
 void keyDown(unsigned char KEY, int x, int y) {
 	switch (KEY) {
@@ -22,6 +22,8 @@ void keyDown(unsigned char KEY, int x, int y) {
 	case 32:
 		if (!gameUpdate) {
 			bgmPlay = true;  // 사운드 on
+			bgmHomeStop = true;  // 사운도 off
+
 			enginePlay = true;
 			gameUpdate = true;
 		}

@@ -252,6 +252,7 @@ void checkCollision() {
 		if ((p[i].x - p[i].width / 2 - 0.5 <= sx && sx <= p[i].x + p[i].width / 2 + 0.5) && (8 <= p[i].z && p[i].z <= 12)) {
 			camY = -5.0;
 			bgmStop = true;
+			bgmHomePlay = true;
 			engineStop = true;
 			init();
 		}

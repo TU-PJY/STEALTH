@@ -8,8 +8,8 @@
 
 
 FMOD::System *ssystem;
-FMOD::Sound *bgm, *engine, *neeling, *wind, *cliffEnd;
-FMOD::Channel* bgmChannel = 0, * engineChannel = 0, * neelingChannel = 0, * windChannel = 0, *cliffChannel = 0;
+FMOD::Sound *bgm, *engine, *neeling, *wind, *cliffEnd, *bgmHome;
+FMOD::Channel* bgmChannel = 0, *bgmHomeChannel = 0, * engineChannel = 0, * neelingChannel = 0, * windChannel = 0, *cliffChannel = 0;
 void* extradriverdata = 0;
 FMOD_RESULT result;
 
@@ -28,6 +28,16 @@ void controlSound() {  // 사운드 컨트롤
 	if (bgmStop) {
 		bgmChannel->stop();
 		bgmStop = false;
+	}
+
+	if (bgmHomePlay) {
+		bgmHomeChannel->stop();
+		ssystem->playSound(bgmHome, 0, false, &bgmHomeChannel);
+		bgmHomePlay = false;
+	}
+	if (bgmHomeStop) {
+		bgmHomeChannel->stop();
+		bgmHomeStop = false;
 	}
 
 	if (enginePlay) {
@@ -50,7 +60,7 @@ void controlSound() {  // 사운드 컨트롤
 		neelingStop = false;
 	}
 
-	if (windSoundNum != windSoundNum2) {  // 빈번하게 플레이 되므로 두 채널이 번갈아 가면서 플레이 한다
+	if (windSoundNum != windSoundNum2) {
 		windChannel->stop();
 		ssystem->playSound(wind, 0, false, &windChannel);
 		windSoundNum2++;
@@ -118,6 +128,9 @@ void main(int argc, char** argv) {
 		ssystem->createSound("..//res//sounds//neeling.ogg", FMOD_LOOP_NORMAL, 0, &neeling);
 		ssystem->createSound("..//res//sounds//wind.ogg", FMOD_DEFAULT, 0, &wind);
 		ssystem->createSound("..//res//sounds//end_of_cliff.ogg", FMOD_DEFAULT, 0, &cliffEnd);
+		ssystem->createSound("..//res//sounds//home_bgm.ogg", FMOD_DEFAULT, 0, &bgmHome);
+
+		ssystem->playSound(bgmHome, 0, false, &bgmHomeChannel);
 	}
 
 	// MODEL_COUNT는 config.h에 정의되어있음
