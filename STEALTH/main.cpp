@@ -8,8 +8,8 @@
 
 
 FMOD::System *ssystem;
-FMOD::Sound *bgm, *engine, *neeling;
-FMOD::Channel *bgmChannel = 0, *engineChannel = 0, *neelingChannel = 0;
+FMOD::Sound *bgm, *engine, *neeling, *wind;
+FMOD::Channel* bgmChannel , * engineChannel = 0, * neelingChannel = 0, * windChannel = 0;
 void* extradriverdata = 0;
 FMOD_RESULT result;
 
@@ -21,6 +21,7 @@ int HEIGHT = GetSystemMetrics(SM_CYSCREEN);  // 화면 사이즈에 맞추어 �
 
 void controlSound() {  // 사운드 컨트롤
 	if (bgmPlay) {
+		bgmChannel->stop();
 		ssystem->playSound(bgm, 0, false, &bgmChannel);
 		bgmPlay = false;
 	}
@@ -30,21 +31,31 @@ void controlSound() {  // 사운드 컨트롤
 	}
 
 	if (enginePlay) {
+		engineChannel->stop();
 		ssystem->playSound(engine, 0, false, &engineChannel);
 		enginePlay = false;
 	}
 	if (engineStop) {
+		cout << "stop engine" << endl;
 		engineChannel->stop();
 		engineStop = false;
 	}
 
 	if (neelingPlay) {
+		neelingChannel->stop();
 		ssystem->playSound(neeling, 0, false, &neelingChannel);
 		neelingPlay = false;
 	}
 	if (neelingStop) {
+		cout << "stop neeling" << endl;
 		neelingChannel->stop();
 		neelingStop = false;
+	}
+
+	if (windPlay) {
+		windChannel->stop();
+		ssystem->playSound(wind, 0, false, &windChannel);
+		windPlay = false;
 	}
 }
 
@@ -100,6 +111,7 @@ void main(int argc, char** argv) {
 		ssystem->createSound("..//res//sounds//bgm.mp3", FMOD_LOOP_NORMAL, 0, &bgm);
 		ssystem->createSound("..//res//sounds//engine.mp3", FMOD_LOOP_NORMAL, 0, &engine);
 		ssystem->createSound("..//res//sounds//neeling.mp3", FMOD_LOOP_NORMAL, 0, &neeling);
+		ssystem->createSound("..//res//sounds//wind.mp3", FMOD_DEFAULT, 0, &wind);
 	}
 
 	// MODEL_COUNT는 config.h에 정의되어있음

@@ -87,7 +87,7 @@ void vertexInput(int idx) {  // vertex
 		break;
 	}
 
-	if(3 <= idx && idx <= 26)  // 장애물 및 절벽
+	if(3 <= idx && idx <= 46)  // 장애물 및 절벽
 		glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 }
 

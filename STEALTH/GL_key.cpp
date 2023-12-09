@@ -9,6 +9,7 @@ extern GLfloat camY;
 bool bgmPlay, bgmStop;
 bool enginePlay, engineStop;
 bool neelingPlay, neelingStop;
+bool windPlay;
 
 void keyDown(unsigned char KEY, int x, int y) {
 	switch (KEY) {

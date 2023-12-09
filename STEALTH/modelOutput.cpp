@@ -31,7 +31,7 @@ GLfloat camMove, camMove2;
 
 GLfloat camY = -5.0;
 
-Pillar p[20];
+Pillar p[40];
 
 void finishTransform(int idx) {  // 변환 전달 
 	projectionLocation = glGetUniformLocation(ID, "projection");
@@ -121,22 +121,22 @@ void setTransform(int idx) {  // 변환 세팅
 		translateMatrix = rotate(translateMatrix, radians(GLfloat(-90)), vec3(1.0, 0.0, 0.0));
 		break;
 
-	case 23: // 왼쪽 절벽
+	case 43: // 왼쪽 절벽
 		translateMatrix = translate(translateMatrix, vec3(-17.0, 0.0, cz - 250));
 		translateMatrix = scale(translateMatrix, vec3(30, 100.0, 500));
 		break;
 
-	case 24: // 오른쪽 절벽
+	case 44: // 오른쪽 절벽
 		translateMatrix = translate(translateMatrix, vec3(17.0, 0.0, cz - 250));
 		translateMatrix = scale(translateMatrix, vec3(30, 100.0, 500));
 		break;
 
-	case 25:  // 왼쪽벽
+	case 45:  // 왼쪽벽
 		translateMatrix = translate(translateMatrix, vec3(-25.0, 0.0, 0.0));
 		translateMatrix = scale(translateMatrix, vec3(30, 100, 500));
 		break;
 
-	case 26:  // 오른쪽벽
+	case 46:  // 오른쪽벽
 		translateMatrix = translate(translateMatrix, vec3(25.0, 0.0, 0.0));
 		translateMatrix = scale(translateMatrix, vec3(30, 100, 500));
 		break;
@@ -167,14 +167,14 @@ void modelOutput(int idx) {  // 모델 출력
 		glDrawArrays(GL_TRIANGLES, 0, model_3.size());
 		break;
 
-	case 23: case 24:
+	case 43: case 44:
 		if (cliffEnable) {
 			glBindTexture(GL_TEXTURE_2D, texture[3]);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 		break;
 
-	case 25: case 26:
+	case 45: case 46:
 		glBindTexture(GL_TEXTURE_2D, texture[3]);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 	}

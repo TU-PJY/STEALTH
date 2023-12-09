@@ -142,14 +142,25 @@ void generatePillar() {
 
 	else {
 		for (int i = 0; i < 2; i++) {
-			if (num < 20) {
+			if (num < 40) {
 				p[num].x = dis(gen);
 				p[num].z = -80;
 				p[num].height = 0;
 			}
-			genDelay = delay;
 			num++;
 		}
+		if (num < 40) {  // 벽에 붙어서 피하는 꼼수 방지
+			p[num].x = -9.0;
+			p[num].z = -80;
+			p[num++].height = 0;
+		}
+		
+		if (num < 40) {
+			p[num].x = 9.0;
+			p[num].z = -80;
+			p[num++].height = 0;
+		}
+		genDelay = delay;
 	}
 }
 
@@ -172,6 +183,9 @@ void movePillar() {
 		p[i].z += speed;
 		p[i].height += 1;
 
+		if (p[i].z == -30)
+			windPlay = true;
+
 		if (p[i].z > 30)
 			removePillar(i);
 	}
@@ -185,6 +199,8 @@ void updateCliff() {
 		if (!accSet) {
 			engineStop = true;
 			neelingPlay = true;
+			windPlay = true;
+
 			num = 0;
 			acc = 1;
 			deg = 0;
@@ -195,12 +211,14 @@ void updateCliff() {
 	}
 
 	if (cz - 250 > 300) {
-		stealthNeeling = false;
-		cliffEnable = false;
 		neelingStop = true;
 		enginePlay = true;
+
+		stealthNeeling = false;
+		cliffEnable = false;
 		acc = 1;
 		accSet = false;
+		genDelay = 150;
 		if (delay > 10)
 			delay -= 5;
 	}
@@ -259,7 +277,7 @@ void timerOperation(int value) {
 			generatePillar();
 		}
 
-		if (moveDistance > 1000 && !cliffEnable) {
+		if (moveDistance > 1200 && !cliffEnable) {
 			moveDistance = 0;
 			cz = -80;
 			cliffEnable = true;
