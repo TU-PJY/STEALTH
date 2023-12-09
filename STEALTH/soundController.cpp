@@ -1,4 +1,4 @@
 extern bool bgmPlay, bgmStop;
 extern bool enginePlay, engineStop;
 extern bool neelingPlay, neelingStop;
-extern bool windPlay;
+extern int windSoundNum, windSoundNum2, channelNum;

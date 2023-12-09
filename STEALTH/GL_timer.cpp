@@ -13,6 +13,7 @@ bool cliffEnable;  // true일 시 절벽이 나타난다
 bool stealthNeeling;  // true 일 시 세로로 기울인다, 조작에 따른 각도 제어 무시
 bool accSet;
 bool gameUpdate = false;
+bool playWindSound;
 
 int genDelay = 150;  // 장애물 생성 딜레이
 int delay = 80;
@@ -56,7 +57,7 @@ void init() {
 void rotateStealth() {
 	if (!stealthNeeling) {
 		if (rotateRight) {  // 오른쪽 회전
-			rot -= 3;
+			rot -= 6;
 			camRot -= 1;
 			if (rot < -45)
 				rot = -45;
@@ -65,7 +66,7 @@ void rotateStealth() {
 		
 		}
 		if (rotateLeft) {  // 왼쪽 회전
-			rot += 3;
+			rot += 6;
 			camRot += 1;
 			if (rot > 45)
 				rot = 45;
@@ -75,14 +76,14 @@ void rotateStealth() {
 		}
 
 		if (rot > 0 && ((!rotateRight && !rotateLeft) || (rotateRight && rotateLeft))) {
-			rot -= 3;
+			rot -= 6;
 			camRot -= 1;
 			if (rot < 0)
 				rot = 0;
 			
 		}
 		if (rot < 0 && ((!rotateRight && !rotateLeft) || (rotateRight && rotateLeft))) {
-			rot += 3;
+			rot += 6;
 			camRot += 1;
 			if (rot > 0)
 				rot = 0;
@@ -184,9 +185,9 @@ void movePillar() {
 		p[i].height += 1;
 
 		if (p[i].z == -30)
-			windPlay = true;
+			playWindSound = true;
 
-		if (p[i].z > 30)
+		if (p[i].z > 40)
 			removePillar(i);
 	}
 }
@@ -197,9 +198,8 @@ void updateCliff() {
 	if (cz + 250 > 250) {
 		stealthNeeling = true;
 		if (!accSet) {
-			engineStop = true;
 			neelingPlay = true;
-			windPlay = true;
+			windSoundNum++;
 
 			num = 0;
 			acc = 1;
@@ -212,7 +212,6 @@ void updateCliff() {
 
 	if (cz - 250 > 300) {
 		neelingStop = true;
-		enginePlay = true;
 
 		stealthNeeling = false;
 		cliffEnable = false;
@@ -266,7 +265,7 @@ void timerOperation(int value) {
 		rotateStealth();
 		moveStealth();
 
-		checkCollision();
+		//checkCollision();
 		movePillar();
 
 		if (cliffEnable)
@@ -309,6 +308,12 @@ void timerOperation(int value) {
 	deg2 += 0.02;
 
 	shakeDisplay();
+
+	if (playWindSound) {
+		channelNum++;
+		windSoundNum++;
+		playWindSound = false;
+	}
 
 	glutTimerFunc(10, timerOperation, 1);
 	glutPostRedisplay();
