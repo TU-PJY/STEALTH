@@ -230,7 +230,7 @@ void shakeDisplay() {
 
 void checkCollision() {
 	for (int i = 0; i < num; i++) {  // 충돌 시 게임이 초기화 된다
-		if ((p[i].x - 2 <= sx && sx <= p[i].x + 2) && (8 <= p[i].z && p[i].z <= 12)) {
+		if ((p[i].x - 1.5 <= sx && sx <= p[i].x + 1.5) && (8 <= p[i].z && p[i].z <= 12)) {
 			gameOver = true;
 			init();
 		}
