@@ -23,6 +23,8 @@
 #include <sstream>
 #include <windows.h>
 #include <cmath>
+#include "fmod.hpp"
+#include "fmod_errors.h"
 
 //#define WIDTH 1500
 //#define HEIGHT 800

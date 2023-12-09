@@ -9,6 +9,7 @@ extern GLuint ID;
 extern GLuint VAO[MODEL_COUNT];  // MODEL_COUNT는 config.h에 정의되어있음
 extern bool cliffEnable;
 extern bool stealthNeeling;
+extern bool gameUpdate;
 
 glm::vec3 cameraPos, cameraDirection, cameraUp, lightPos, objColor;
 glm::mat4 transformMatrix, view, projection, lightMatrix, scaleMatrix, rotateMatrix, translateMatrix;
@@ -20,13 +21,15 @@ GLfloat rot;  // 전투기 회전 각도
 GLfloat sx;  // 전투기 좌우 위치
 GLfloat width;
 GLfloat cz; // 절벽 위치
-GLfloat fov;
+GLfloat fov = 35;
 GLfloat gz;
 
 GLfloat shakeX, shakeY, shakeZ;
 GLfloat camRot;
 
 GLfloat camMove, camMove2;
+
+GLfloat camY = -5.0;
 
 Pillar p[20];
 
@@ -44,7 +47,7 @@ void finishTransform(int idx) {  // 변환 전달
 	glUniform3f(lightColorLocation, 1.0, 1.0, 1.0);
 
 	objColorLocation = glGetUniformLocation(ID, "objectColor"); // object Color값 전달: (1.0, 0.5, 0.3)의 색
-	glUniform3f(objColorLocation, objColor.x, objColor.y, objColor.z);
+	glUniform3f(objColorLocation,1.0, 1.0, 1.0);
 
 	viewPosLocation = glGetUniformLocation(ID, "viewPos"); // viewPos 값 전달: 카메라 위치
 	glUniform3f(viewPosLocation, cameraPos.x, cameraPos.y, cameraPos.z);
@@ -58,7 +61,7 @@ void finishTransform(int idx) {  // 변환 전달
 void setCamera() {  // 카메라 세팅
 	using namespace glm;
 	view = mat4(1.0f);
-	cameraPos = vec3(0.0f, 10.0f, 40.0f);
+	cameraPos = vec3(0.0f, camY, 40.0f);
 	cameraDirection = vec3(0.0f, 0.0f, 0.0f);
 	cameraUp = vec3(0.0f, 1.0f, 0.0f);
 	view = lookAt(cameraPos, cameraDirection, cameraUp);
@@ -83,7 +86,7 @@ void setProjection(int projectionMode) {  // 투영 세팅
 void setLight() {  // 조명 세팅
 	using namespace glm;
 	lightMatrix = mat4(1.0f);
-	lightPos = vec3(0.0f, 20.0f, 20.0f);  // 조명 위치
+	lightPos = vec3(0.0f, 50.0f, 20.0f);  // 조명 위치
 	// 여기에 빛 변환 추가
 
 	vec3 initialLightPos = vec3(lightPos.x, lightPos.y, lightPos.z);
@@ -105,7 +108,6 @@ void setTransform(int idx) {  // 변환 세팅
 		translateMatrix = translate(translateMatrix, vec3(sx, -5.0, 10.0));  // 화면 하단에 위치해야 하므로 y축으로 -5.0만큼 이동
 		translateMatrix = scale(translateMatrix, vec3(0.5, 0.5, 0.5));
 		translateMatrix = rotate(translateMatrix, radians(rot), vec3(0.0, 0.0, 1.0));  // 제자리 회전
-		objColor = vec3(0.5, 0.5, 0.5);
 		break;
 
 	case 1:  // 배경
@@ -161,7 +163,7 @@ void modelOutput(int idx) {  // 모델 출력
 		break;
 
 	case 2:  // 땅 출력
-		glBindTexture(GL_TEXTURE_2D, texture[3]);
+		glBindTexture(GL_TEXTURE_2D, texture[2]);
 		glDrawArrays(GL_TRIANGLES, 0, model_3.size());
 		break;
 

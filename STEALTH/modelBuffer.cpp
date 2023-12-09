@@ -204,7 +204,7 @@ void setTexture() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	texture_data = LoadDIBitmap("..//res//texture//texture_pillar.bmp", &bmp);
+	texture_data = LoadDIBitmap("..//res//texture//texture_wall.bmp", &bmp);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, 1024, 512, 0, GL_BGR, GL_UNSIGNED_BYTE, texture_data);
 
 	glGenTextures(1, &texture[4]);
@@ -213,7 +213,7 @@ void setTexture() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	texture_data = LoadDIBitmap("..//res//texture//texture_cliff.bmp", &bmp);
+	texture_data = LoadDIBitmap("..//res//texture//texture_pillar.bmp", &bmp);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, 1024, 512, 0, GL_BGR, GL_UNSIGNED_BYTE, texture_data);
 }
 

@@ -2,7 +2,7 @@
 #include "gl_func.h"
 #include "pillar.h"
 
-extern GLfloat rot, sx, cz, fov, camRot, camMove, camMove2, gz;
+extern GLfloat rot, sx, cz, fov, camRot, camMove, camMove2, gz, camY;
 extern GLfloat shakeX, shakeY, shakeZ;
 GLfloat speed = 2;
 GLfloat acc = 0;
@@ -11,16 +11,15 @@ bool rotateRight, rotateLeft; // 각각 오른쪽 회전, 왼쪽 회전
 bool cliffEnable;  // true일 시 절벽이 나타난다
 bool stealthNeeling;  // true 일 시 세로로 기울인다, 조작에 따른 각도 제어 무시
 bool accSet;
-bool timerOperate = true;
-bool gameUpdate = true;
-bool gameOver;
+bool gameUpdate = false;
 
-int genDelay;  // 장애물 생성 딜레이
+int genDelay = 80;  // 장애물 생성 딜레이
 int delay = 80;
 int num = 0;
 int moveDistance = 0;
 int level = 0;
-float shakeTime = 0;
+
+GLfloat camAcc = 0.6;
 
 random_device rd;  mt19937 gen(rd());
 uniform_real_distribution <GLfloat> dis(-9.0f, 9.0f);
@@ -45,6 +44,7 @@ void init() {
 	moveDistance = 0;
 	deg = 0;
 	deg2 = 0;
+	camAcc = 0.6;
 	accSet = false;
 	cliffEnable = false;
 	stealthNeeling = false;
@@ -231,48 +231,34 @@ void shakeDisplay() {
 void checkCollision() {
 	for (int i = 0; i < num; i++) {  // 충돌 시 게임이 초기화 된다
 		if ((p[i].x - 1.5 <= sx && sx <= p[i].x + 1.5) && (8 <= p[i].z && p[i].z <= 12)) {
-			gameOver = true;
+			camY = -5.0;
 			init();
 		}
 	}
 }
 
-void shakeDisplay2() {
-	shakeTime += 0.1;
-
-	if (shakeTime < 10) {
-		shakeX = 0;
-		shakeY = 0;
-		shakeX = shake_range3(gen);
-		shakeY = shake_range3(gen);
-	}
-	else {
-		shakeX = 0;
-		shakeY = 0;
-		shakeTime = 0;
-		gameOver = false;
-	}
-}
-
 void timerOperation(int value) {
-	if (gameOver && !gameUpdate) {
-		shakeDisplay2();
-	}
-
 	if (gameUpdate) {
-		checkCollision();
+		if (camY < 10.0) {
+			camY += camAcc;
+			camAcc -= 0.01;
+			if (camY > 10.0)
+				camY = 10.0;
+		}
 
 		rotateStealth();
 		moveStealth();
-		if (!cliffEnable)
-			generatePillar();
+
+		checkCollision();
 		movePillar();
 
 		if (cliffEnable)
 			updateCliff();
 
-		if (!cliffEnable)
+		if (!cliffEnable) {
 			moveDistance++;
+			generatePillar();
+		}
 
 		if (moveDistance > 1000 && !cliffEnable) {
 			moveDistance = 0;
@@ -296,23 +282,17 @@ void timerOperation(int value) {
 				acc = 0;
 			if (fov < 35)
 				fov = 35;
-
-			camMove = sin(deg);
-			deg += 0.04;
-
-			camMove2 = sin(deg2);
-			deg2 += 0.02;
 		}
-
-		gz += speed;
-		if (gz > 170)
-			gz = 0;
-
-		shakeDisplay();
 	}
 
-	glutTimerFunc(10, timerOperation, 1);
+	camMove = sin(deg);
+	deg += 0.04;
 
-	if (glutGetWindow() != 0)
-		glutPostRedisplay();
+	camMove2 = sin(deg2);
+	deg2 += 0.02;
+
+	shakeDisplay();
+
+	glutTimerFunc(10, timerOperation, 1);
+	glutPostRedisplay();
 }

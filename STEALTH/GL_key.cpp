@@ -1,8 +1,9 @@
 ﻿// 키보드 조작
 #include "gl_func.h"
 
-extern bool rotateRight, rotateLeft, gameUpdate, gameOver;
+extern bool rotateRight, rotateLeft, gameUpdate, overShake;
 extern float shakeTime;
+extern GLfloat camY;
 
 void keyDown(unsigned char KEY, int x, int y) {
 	switch (KEY) {
@@ -11,8 +12,6 @@ void keyDown(unsigned char KEY, int x, int y) {
 		break;
 	case 32:
 		if (!gameUpdate) {
-			gameOver = false;
-			shakeTime = 0;
 			gameUpdate = true;
 		}
 		break;
