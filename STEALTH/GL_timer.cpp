@@ -3,7 +3,7 @@
 #include "pillar.h"
 #include "soundController.cpp"
 
-extern GLfloat rot, sx, cz, fov, camRot, camMove, camMove2, gz, camY, cliffHeight;
+extern GLfloat rot, sx, cz, fov, camRot, camMove, camMove2, gz, camY, cliffHeight, camZ, stealthPos;
 extern GLfloat shakeX, shakeY, shakeZ;
 
 GLfloat speed = 3;
@@ -26,6 +26,7 @@ int num = 0;  // 장애물 개수
 
 random_device rd;  mt19937 gen(rd());
 uniform_real_distribution <GLfloat> dis(-7.0f, 7.0f);
+uniform_real_distribution <GLfloat> shake(-0.1f, 0.1f);
 uniform_real_distribution <GLfloat> shake_range(-0.2f, 0.2f);
 uniform_real_distribution <GLfloat> shake_range2(-0.9f, 0.9f);
 uniform_real_distribution <GLfloat> shake_range3(-1.5f, 1.5f);
@@ -247,6 +248,13 @@ void shakeDisplay() {
 	}
 }
 
+void shakeDisplayHome() {
+	shakeX = 0;
+	shakeY = 0;
+	shakeX = shake(gen);
+	shakeY = shake(gen);
+}
+
 void checkCollision() {
 	for (int i = 0; i < num; i++) {  // 충돌 시 게임이 초기화 된다
 		if ((p[i].x - p[i].width / 2 - 0.5 <= sx && sx <= p[i].x + p[i].width / 2 + 0.5) && (8 <= p[i].z && p[i].z <= 12)) {
@@ -254,6 +262,8 @@ void checkCollision() {
 			bgmStop = true;
 			bgmHomePlay = true;
 			engineStop = true;
+			camZ = 15.0;
+			stealthPos = 100.0;
 			init();
 		}
 	}
@@ -264,6 +274,7 @@ void timerOperation(int value) {
 		rotateStealth();
 		moveStealth();
 		movePillar();
+		shakeDisplay();
 		checkCollision();
 
 		if (cliffEnable) {
@@ -317,18 +328,37 @@ void timerOperation(int value) {
 					camY = 10.0;
 			}
 		}
+
+		camMove = sin(deg);
+		deg += 0.04;
+
+		camMove2 = sin(deg2);
+		deg2 += 0.02;
 	}
 
-	camMove = sin(deg);
-	deg += 0.04;
+	if (!gameUpdate) {
+		shakeDisplayHome();
 
-	camMove2 = sin(deg2);
-	deg2 += 0.02;
+		camMove = sin(deg);
+		deg += 0.02;
 
-	shakeDisplay();
+		camMove2 = sin(deg2);
+		deg2 += 0.01;
+	}
+
+	if (camZ < 40) {
+		camZ += 0.2;
+		if (camZ > 40)
+			camZ = 40;
+	}
+
+	if (stealthPos > 10) {
+		stealthPos -= 0.5;
+		if (stealthPos < 10)
+			stealthPos = 10;
+	}
 
 	if (playWindSound) {
-		channelNum++;
 		windSoundNum++;
 		playWindSound = false;
 	}

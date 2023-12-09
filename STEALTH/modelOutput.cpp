@@ -28,6 +28,8 @@ GLfloat shakeX, shakeY, shakeZ;
 GLfloat camRot;
 
 GLfloat camMove, camMove2;
+GLfloat camZ = 15.0f;
+GLfloat stealthPos = 100.0f;  // to 10.0
 
 GLfloat camY = -5.0;
 
@@ -65,12 +67,14 @@ void finishTransform(int idx) {  // 변환 전달
 void setCamera() {  // 카메라 세팅
 	using namespace glm;
 	view = mat4(1.0f);
-	cameraPos = vec3(0.0f, camY, 40.0f);
+	cameraPos = vec3(0.0f, camY, camZ);
 	cameraDirection = vec3(0.0f, 0.0f, 0.0f);
 	cameraUp = vec3(0.0f, 1.0f, 0.0f);
 	view = lookAt(cameraPos, cameraDirection, cameraUp);
 	view = translate(view, vec3(camMove, camMove2, 0.0));
 	view = rotate(view, radians(-camRot), vec3(0.0, 0.0, 1.0));
+	if(!gameUpdate)
+		view = rotate(view, radians(8.0f), vec3(0.0, 1.0, 0.0));
 }
 
 void setProjection(int projectionMode) {  // 투영 세팅
@@ -109,7 +113,7 @@ void setTransform(int idx) {  // 변환 세팅
 
 	switch (idx) {  // 변환 추가 
 	case 0:  // 전투기 변환
-		translateMatrix = translate(translateMatrix, vec3(sx, -5.0, 10.0));  // 화면 하단에 위치해야 하므로 y축으로 -5.0만큼 이동
+		translateMatrix = translate(translateMatrix, vec3(sx, -5.0, stealthPos));  // 화면 하단에 위치해야 하므로 y축으로 -5.0만큼 이동
 		translateMatrix = scale(translateMatrix, vec3(0.5, 0.5, 0.5));
 		translateMatrix = rotate(translateMatrix, radians(rot), vec3(0.0, 0.0, 1.0));  // 제자리 회전
 		break;
