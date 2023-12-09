@@ -10,36 +10,34 @@ GLfloat deg, deg2;
 bool rotateRight, rotateLeft; // 각각 오른쪽 회전, 왼쪽 회전
 bool cliffEnable;  // true일 시 절벽이 나타난다
 bool stealthNeeling;  // true 일 시 세로로 기울인다, 조작에 따른 각도 제어 무시
-bool camRotate;
 bool accSet;
 bool timerOperate = true;
+bool gameUpdate = true;
+bool gameOver;
 
 int genDelay;  // 장애물 생성 딜레이
 int delay = 80;
 int num = 0;
 int moveDistance = 0;
 int level = 0;
+float shakeTime = 0;
 
 random_device rd;  mt19937 gen(rd());
-uniform_int_distribution <int> rand_type(1, 10);
-uniform_int_distribution <int> rand_dir(0, 1);
 uniform_real_distribution <GLfloat> dis(-9.0f, 9.0f);
 uniform_real_distribution <GLfloat> shake_range(-0.2f, 0.2f);
 uniform_real_distribution <GLfloat> shake_range2(-0.9f, 0.9f);
+uniform_real_distribution <GLfloat> shake_range3(-1.5f, 1.5f);
 
 void init() {
 	delay = 80;
 	num = 0;
-	accSet = false;
-	cliffEnable = false;
-	stealthNeeling = false;
 	camRot = 0;
 	camMove = 0;
 	camMove2 = 0;
 	shakeX = 0;
 	shakeY = 0;
 	shakeZ = 0;
-	fov = 45;
+	fov = 35;
 	gz = 0;
 	cz = 0;
 	sx = 0;
@@ -47,6 +45,10 @@ void init() {
 	moveDistance = 0;
 	deg = 0;
 	deg2 = 0;
+	accSet = false;
+	cliffEnable = false;
+	stealthNeeling = false;
+	gameUpdate = false;
 }
 
 void rotateStealth() {
@@ -108,34 +110,34 @@ void rotateStealth() {
 void moveStealth() {
 	if (!stealthNeeling) {
 		if (rotateRight) {  // 오른쪽 이동
-			sx += 0.8;
-			if (sx > 15)
-				sx = 15;
+			sx += 0.5;
+			if (sx > 9)
+				sx = 9;
 		}
 		if (rotateLeft) {  // 왼쪽 이동
-			sx -= 0.8;
-			if (sx < -15)
-				sx = -15;
+			sx -= 0.5;
+			if (sx < -9)
+				sx = -9;
 		}
 		if (sx > 0 && ((!rotateRight && !rotateLeft) || (rotateRight && rotateLeft))) {
-			sx -= 0.8;
+			sx -= 0.5;
 			if (sx < 0)
 				sx = 0;
 		}
 		if (sx < 0 && ((!rotateRight && !rotateLeft) || (rotateRight && rotateLeft))) {
-			sx += 0.8;
+			sx += 0.5;
 			if (sx > 0)
 				sx = 0;
 		}
 	}
 	else {
 		if (sx > 0) {
-			sx -= 0.8;
+			sx -= 0.5;
 			if (sx < 0)
 				sx = 0;
 		}
 		if (sx < 0) {
-			sx += 0.8;
+			sx += 0.5;
 			if (sx > 0)
 				sx = 0;
 		}
@@ -211,72 +213,106 @@ void shakeDisplay() {
 	if (!stealthNeeling) {
 		shakeX = 0;
 		shakeY = 0;
-		shakeZ = 0;
+		//shakeZ = 0;
 		shakeX = shake_range(gen);
 		shakeY = shake_range(gen);
-		shakeZ = shake_range(gen);
+		//shakeZ = shake_range(gen);
 	}
 	else {
 		shakeX = 0;
 		shakeY = 0;
-		shakeZ = 0;
+		//shakeZ = 0;
 		shakeX = shake_range2(gen);
 		shakeY = shake_range2(gen);
-		shakeZ = shake_range2(gen);
+		//shakeZ = shake_range2(gen);
+	}
+}
+
+void checkCollision() {
+	for (int i = 0; i < num; i++) {  // 충돌 시 게임이 초기화 된다
+		if ((p[i].x - 2 <= sx && sx <= p[i].x + 2) && (8 <= p[i].z && p[i].z <= 12)) {
+			gameOver = true;
+			init();
+		}
+	}
+}
+
+void shakeDisplay2() {
+	shakeTime += 0.1;
+
+	if (shakeTime < 10) {
+		shakeX = 0;
+		shakeY = 0;
+		shakeX = shake_range3(gen);
+		shakeY = shake_range3(gen);
+	}
+	else {
+		shakeX = 0;
+		shakeY = 0;
+		shakeTime = 0;
+		gameOver = false;
 	}
 }
 
 void timerOperation(int value) {
-	rotateStealth();
-	moveStealth();
-	if (!cliffEnable)
-		generatePillar();
-	movePillar();
-
-	if(cliffEnable)
-		updateCliff();
-
-	if(!cliffEnable)
-		moveDistance++;
-
-	if (moveDistance > 1000 && !cliffEnable) {
-		moveDistance = 0;
-		cz = -80;
-		cliffEnable = true;
+	if (gameOver && !gameUpdate) {
+		shakeDisplay2();
 	}
 
-	if (stealthNeeling) {
-		fov += acc;
-		acc -= 0.01;
-		if (acc < 0)
-			acc = 0;
-		if (fov > 120)
-			fov = 120;
+	if (gameUpdate) {
+		checkCollision();
+
+		rotateStealth();
+		moveStealth();
+		if (!cliffEnable)
+			generatePillar();
+		movePillar();
+
+		if (cliffEnable)
+			updateCliff();
+
+		if (!cliffEnable)
+			moveDistance++;
+
+		if (moveDistance > 1000 && !cliffEnable) {
+			moveDistance = 0;
+			cz = -80;
+			cliffEnable = true;
+		}
+
+		if (stealthNeeling) {
+			fov += acc;
+			acc -= 0.01;
+			if (acc < 0)
+				acc = 0;
+			if (fov > 120)
+				fov = 120;
+		}
+		if (!stealthNeeling) {
+			fov -= acc;
+			acc -= 0.01;
+
+			if (acc < 0)
+				acc = 0;
+			if (fov < 35)
+				fov = 35;
+
+			camMove = sin(deg);
+			deg += 0.04;
+
+			camMove2 = sin(deg2);
+			deg2 += 0.02;
+		}
+
+		gz += speed;
+		if (gz > 170)
+			gz = 0;
+
+		shakeDisplay();
 	}
-	if (!stealthNeeling) {
-		fov -= acc;
-		acc -= 0.01;
 
-		if (acc < 0)
-			acc = 0;
-		if (fov < 35)
-			fov = 35;
+	glutTimerFunc(10, timerOperation, 1);
 
-		camMove = sin(deg);
-		deg += 0.04;
-
-		camMove2 = sin(deg2);
-		deg2 += 0.02;
-	}
-
-	gz += speed;
-	if (gz > 170)
-		gz = 0;
-
-	shakeDisplay();
-
-	if (timerOperate)
-		glutTimerFunc(10, timerOperation, 1);
 	if (glutGetWindow() != 0)
 		glutPostRedisplay();
 }

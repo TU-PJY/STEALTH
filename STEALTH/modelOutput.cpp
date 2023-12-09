@@ -102,8 +102,8 @@ void setTransform(int idx) {  // 변환 세팅
 
 	switch (idx) {  // 변환 추가 
 	case 0:  // 전투기 변환
+		translateMatrix = translate(translateMatrix, vec3(sx, -5.0, 10.0));  // 화면 하단에 위치해야 하므로 y축으로 -5.0만큼 이동
 		translateMatrix = scale(translateMatrix, vec3(0.5, 0.5, 0.5));
-		translateMatrix = translate(translateMatrix, vec3(sx, -5.0, 30.0));  // 화면 하단에 위치해야 하므로 y축으로 -5.0만큼 이동
 		translateMatrix = rotate(translateMatrix, radians(rot), vec3(0.0, 0.0, 1.0));  // 제자리 회전
 		objColor = vec3(0.5, 0.5, 0.5);
 		break;
@@ -178,7 +178,7 @@ void modelOutput(int idx) {  // 모델 출력
 	}
 
 	if (3 <= idx && idx < 3 + num) {
-		glBindTexture(GL_TEXTURE_2D, texture[3]);
+		glBindTexture(GL_TEXTURE_2D, texture[4]);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 }
