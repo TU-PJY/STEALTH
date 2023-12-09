@@ -29,6 +29,7 @@ uniform_real_distribution <GLfloat> shake_range3(-1.5f, 1.5f);
 
 void init() {
 	delay = 80;
+	genDelay = 80;
 	num = 0;
 	camRot = 0;
 	camMove = 0;
@@ -119,16 +120,6 @@ void moveStealth() {
 			if (sx < -9)
 				sx = -9;
 		}
-		if (sx > 0 && ((!rotateRight && !rotateLeft) || (rotateRight && rotateLeft))) {
-			sx -= 0.5;
-			if (sx < 0)
-				sx = 0;
-		}
-		if (sx < 0 && ((!rotateRight && !rotateLeft) || (rotateRight && rotateLeft))) {
-			sx += 0.5;
-			if (sx > 0)
-				sx = 0;
-		}
 	}
 	else {
 		if (sx > 0) {
@@ -202,10 +193,8 @@ void updateCliff() {
 		cliffEnable = false;
 		acc = 1;
 		accSet = false;
-		if (delay > 20)
-			delay -= 10;
-			if (delay == 0)
-				init();
+		if (delay > 10)
+			delay -= 5;
 	}
 }
 
