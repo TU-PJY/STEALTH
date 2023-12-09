@@ -10,6 +10,8 @@
 #include <gl/glm/glm.hpp> //  이 include들을 다른데로 옮기지 말 것!
 #include <gl/glm/ext.hpp> 
 #include <gl/glm/gtc/matrix_transform.hpp>
+#include "fmod.hpp"
+#include "fmod_errors.h"
 //#include <gl/glm/glm/glm.hpp>
 //#include <gl/glm/glm/ext.hpp>
 //#include <gl/glm/glm/gtc/matrix_transform.hpp>
@@ -23,8 +25,6 @@
 #include <sstream>
 #include <windows.h>
 #include <cmath>
-#include "fmod.hpp"
-#include "fmod_errors.h"
 
 //#define WIDTH 1500
 //#define HEIGHT 800

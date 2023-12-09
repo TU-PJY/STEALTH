@@ -7,5 +7,4 @@ typedef struct {
 	int type;
 }Pillar;
 extern Pillar p[20];
-
 extern int num;

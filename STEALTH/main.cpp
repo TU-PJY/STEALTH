@@ -4,12 +4,49 @@
 #include "translate.h"  // 변환
 #include "gl_func.h"  // GL 기능 함수
 #include "screen.h"
+#include "soundController.cpp"
+
+
+FMOD::System *ssystem;
+FMOD::Sound *bgm, *engine, *neeling;
+FMOD::Channel *bgmChannel = 0, *engineChannel = 0, *neelingChannel = 0;
+void* extradriverdata = 0;
+FMOD_RESULT result;
 
 extern GLuint ID;
 int projectionMode = modePers;  // 직각투영/원근투영, 기본 원근투영 모드, modeOrtho로 변경 시 알아서 바뀜
 
 int WIDTH = GetSystemMetrics(SM_CXSCREEN);
 int HEIGHT = GetSystemMetrics(SM_CYSCREEN);  // 화면 사이즈에 맞추어 창을 출력한다
+
+void controlSound() {  // 사운드 컨트롤
+	if (bgmPlay) {
+		ssystem->playSound(bgm, 0, false, &bgmChannel);
+		bgmPlay = false;
+	}
+	if (bgmStop) {
+		bgmChannel->stop();
+		bgmStop = false;
+	}
+
+	if (enginePlay) {
+		ssystem->playSound(engine, 0, false, &engineChannel);
+		enginePlay = false;
+	}
+	if (engineStop) {
+		engineChannel->stop();
+		engineStop = false;
+	}
+
+	if (neelingPlay) {
+		ssystem->playSound(neeling, 0, false, &neelingChannel);
+		neelingPlay = false;
+	}
+	if (neelingStop) {
+		neelingChannel->stop();
+		neelingStop = false;
+	}
+}
 
 GLvoid displayOutput() {
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -27,6 +64,8 @@ GLvoid displayOutput() {
 		modelOutput(i);  // 최종 출력, 3개 함수 모두 modelOutput.cpp에 있음
 	}
 	
+	controlSound();
+
 	glutSwapBuffers();
 }
 
@@ -52,6 +91,15 @@ void main(int argc, char** argv) {
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_MULTISAMPLE);
 		makeShaderProgram();
+
+		result = FMOD::System_Create(&ssystem);
+		if (result != FMOD_OK)
+			exit(0);
+
+		ssystem->init(32, FMOD_INIT_NORMAL, extradriverdata);
+		ssystem->createSound("..//res//sounds//bgm.mp3", FMOD_LOOP_NORMAL, 0, &bgm);
+		ssystem->createSound("..//res//sounds//engine.mp3", FMOD_LOOP_NORMAL, 0, &engine);
+		ssystem->createSound("..//res//sounds//neeling.mp3", FMOD_LOOP_NORMAL, 0, &neeling);
 	}
 
 	// MODEL_COUNT는 config.h에 정의되어있음

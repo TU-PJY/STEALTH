@@ -1,6 +1,7 @@
 ﻿// 타이머
 #include "gl_func.h"
 #include "pillar.h"
+#include "soundController.cpp"
 
 extern GLfloat rot, sx, cz, fov, camRot, camMove, camMove2, gz, camY;
 extern GLfloat shakeX, shakeY, shakeZ;
@@ -13,7 +14,7 @@ bool stealthNeeling;  // true 일 시 세로로 기울인다, 조작에 따른 �
 bool accSet;
 bool gameUpdate = false;
 
-int genDelay = 80;  // 장애물 생성 딜레이
+int genDelay = 150;  // 장애물 생성 딜레이
 int delay = 80;
 int num = 0;
 int moveDistance = 0;
@@ -29,7 +30,7 @@ uniform_real_distribution <GLfloat> shake_range3(-1.5f, 1.5f);
 
 void init() {
 	delay = 80;
-	genDelay = 80;
+	genDelay = 150;
 	num = 0;
 	camRot = 0;
 	camMove = 0;
@@ -140,13 +141,15 @@ void generatePillar() {
 		genDelay--;
 
 	else {
-		if (num < 20) {
-			p[num].x = dis(gen);
-			p[num].z = -80;
-			p[num].height = 0;
+		for (int i = 0; i < 2; i++) {
+			if (num < 20) {
+				p[num].x = dis(gen);
+				p[num].z = -80;
+				p[num].height = 0;
+			}
+			genDelay = delay;
+			num++;
 		}
-		genDelay = delay;
-		num++;
 	}
 }
 
@@ -180,6 +183,9 @@ void updateCliff() {
 	if (cz + 250 > 250) {
 		stealthNeeling = true;
 		if (!accSet) {
+			engineStop = true;
+			neelingPlay = true;
+			num = 0;
 			acc = 1;
 			deg = 0;
 			deg2 = 0;
@@ -191,6 +197,8 @@ void updateCliff() {
 	if (cz - 250 > 300) {
 		stealthNeeling = false;
 		cliffEnable = false;
+		neelingStop = true;
+		enginePlay = true;
 		acc = 1;
 		accSet = false;
 		if (delay > 10)
@@ -221,6 +229,8 @@ void checkCollision() {
 	for (int i = 0; i < num; i++) {  // 충돌 시 게임이 초기화 된다
 		if ((p[i].x - 1.5 <= sx && sx <= p[i].x + 1.5) && (8 <= p[i].z && p[i].z <= 12)) {
 			camY = -5.0;
+			bgmStop = true;
+			engineStop = true;
 			init();
 		}
 	}

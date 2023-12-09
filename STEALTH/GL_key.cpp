@@ -1,9 +1,14 @@
 ﻿// 키보드 조작
 #include "gl_func.h"
+#include "soundController.cpp"
 
 extern bool rotateRight, rotateLeft, gameUpdate, overShake;
 extern float shakeTime;
 extern GLfloat camY;
+
+bool bgmPlay, bgmStop;
+bool enginePlay, engineStop;
+bool neelingPlay, neelingStop;
 
 void keyDown(unsigned char KEY, int x, int y) {
 	switch (KEY) {
@@ -12,6 +17,8 @@ void keyDown(unsigned char KEY, int x, int y) {
 		break;
 	case 32:
 		if (!gameUpdate) {
+			bgmPlay = true;  // 사운드 on
+			enginePlay = true;
 			gameUpdate = true;
 		}
 		break;
