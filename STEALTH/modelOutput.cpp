@@ -58,10 +58,7 @@ void finishTransform(int idx) {  // 변환 전달
 void setCamera() {  // 카메라 세팅
 	using namespace glm;
 	view = mat4(1.0f);
-	if(!stealthNeeling)
-		cameraPos = vec3(0.0f, 10.0f, 40.0f);
-	else
-		cameraPos = vec3(0.0f, -3.0f, 30.0f);
+	cameraPos = vec3(0.0f, 10.0f, 40.0f);
 	cameraDirection = vec3(0.0f, 0.0f, 0.0f);
 	cameraUp = vec3(0.0f, 1.0f, 0.0f);
 	view = lookAt(cameraPos, cameraDirection, cameraUp);
@@ -145,7 +142,7 @@ void setTransform(int idx) {  // 변환 세팅
 
 	if (3 <= idx && idx < 3 + num) {  // 장애물
 		translateMatrix = translate(translateMatrix, vec3(p[idx - 3].x, -10.0, p[idx - 3].z));
-		translateMatrix = scale(translateMatrix, vec3(p[idx - 3].width, p[idx - 3].height, 2));
+		translateMatrix = scale(translateMatrix, vec3(2, p[idx - 3].height, 2));
 	}
 
 	transformMatrix = scaleMatrix * rotateMatrix * translateMatrix;  // 최종 변환

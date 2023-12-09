@@ -18,6 +18,7 @@ int genDelay;  // 장애물 생성 딜레이
 int delay = 80;
 int num = 0;
 int moveDistance = 0;
+int level = 0;
 
 random_device rd;  mt19937 gen(rd());
 uniform_int_distribution <int> rand_type(1, 10);
@@ -146,31 +147,13 @@ void generatePillar() {
 		genDelay--;
 
 	else {
-		int type = rand_type(gen);
 		if (num < 20) {
-			if (type >= 1 && type <= 9) {
-				p[num].x = dis(gen);
-				p[num].z = -80;
-				p[num].height = 0;
-				p[num].width = 2;
-				p[num].type = type;
-			}
-
-			else if (type == 10){  // 벽에서 벽이 튀어나온다
-				int dir = rand_dir(gen);
-				if (dir == 1)
-					p[num].x = 9.0;
-				else if (dir == 0)
-					p[num].x = -9.0;
-
-				p[num].z = -80;
-				p[num].height = 100;
-				p[num].width = 0;
-				p[num].type = type;
-			}
-			genDelay = delay;
-			num++;
+			p[num].x = dis(gen);
+			p[num].z = -80;
+			p[num].height = 0;
 		}
+		genDelay = delay;
+		num++;
 	}
 }
 
@@ -182,7 +165,6 @@ void removePillar(int idx) {
 			p[i].x = p[i + 1].x;
 			p[i].z = p[i + 1].z;
 			p[i].height = p[i + 1].height;
-			p[i].width = p[i + 1].width;
 			p[i].type = p[i + 1].type;
 		}
 		num--;
@@ -192,14 +174,7 @@ void removePillar(int idx) {
 void movePillar() {
 	for (int i = 0; i < num; i++) {
 		p[i].z += speed;
-
-		if (p[i].type >= 1 && p[i].type <= 9)
-			p[i].height += 1;
-
-		else if (p[i].type == 10) {
-			if (p[i].width < 20)
-				p[i].width += 0.3;
-		}
+		p[i].height += 1;
 
 		if (p[i].z > 30)
 			removePillar(i);
@@ -227,6 +202,8 @@ void updateCliff() {
 		accSet = false;
 		if (delay > 20)
 			delay -= 10;
+			if (delay == 0)
+				init();
 	}
 }
 
