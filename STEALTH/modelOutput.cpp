@@ -31,7 +31,11 @@ GLfloat camMove, camMove2;
 
 GLfloat camY = -5.0;
 
-Pillar p[40];
+GLfloat cliffHeight;
+
+extern int num;
+
+Pillar p[50];
 
 void finishTransform(int idx) {  // 변환 전달 
 	projectionLocation = glGetUniformLocation(ID, "projection");
@@ -111,8 +115,8 @@ void setTransform(int idx) {  // 변환 세팅
 		break;
 
 	case 1:  // 배경
-		translateMatrix = translate(translateMatrix, vec3(0.0, 0.0, -80.0));
-		translateMatrix = scale(translateMatrix, vec3(10.0, 10.0, 0.1));
+		translateMatrix = translate(translateMatrix, vec3(0.0, 0.0, -200.0));
+		translateMatrix = scale(translateMatrix, vec3(100.0, 300.0, 0.1));
 		break;
 
 	case 2:  // 땅
@@ -121,30 +125,30 @@ void setTransform(int idx) {  // 변환 세팅
 		translateMatrix = rotate(translateMatrix, radians(GLfloat(-90)), vec3(1.0, 0.0, 0.0));
 		break;
 
-	case 43: // 왼쪽 절벽
-		translateMatrix = translate(translateMatrix, vec3(-17.0, 0.0, cz - 250));
-		translateMatrix = scale(translateMatrix, vec3(30, 100.0, 500));
+	case 3: // 왼쪽 절벽
+		translateMatrix = translate(translateMatrix, vec3(-17.0, -5.0, cz - 400));
+		translateMatrix = scale(translateMatrix, vec3(30, cliffHeight, 800));
 		break;
 
-	case 44: // 오른쪽 절벽
-		translateMatrix = translate(translateMatrix, vec3(17.0, 0.0, cz - 250));
-		translateMatrix = scale(translateMatrix, vec3(30, 100.0, 500));
+	case 4: // 오른쪽 절벽
+		translateMatrix = translate(translateMatrix, vec3(17.0, -5.0, cz - 400));
+		translateMatrix = scale(translateMatrix, vec3(30, cliffHeight, 800));
 		break;
 
-	case 45:  // 왼쪽벽
+	case 5:  // 왼쪽벽
 		translateMatrix = translate(translateMatrix, vec3(-25.0, 0.0, 0.0));
 		translateMatrix = scale(translateMatrix, vec3(30, 100, 500));
 		break;
 
-	case 46:  // 오른쪽벽
+	case 6:  // 오른쪽벽
 		translateMatrix = translate(translateMatrix, vec3(25.0, 0.0, 0.0));
 		translateMatrix = scale(translateMatrix, vec3(30, 100, 500));
 		break;
 	}
 
-	if (3 <= idx && idx < 3 + num) {  // 장애물
-		translateMatrix = translate(translateMatrix, vec3(p[idx - 3].x, -10.0, p[idx - 3].z));
-		translateMatrix = scale(translateMatrix, vec3(2, p[idx - 3].height, 2));
+	if (6 < idx && idx < num + 7) {  // 장애물
+		translateMatrix = translate(translateMatrix, vec3(p[idx - 7].x, -10.0, p[idx - 7].z));
+		translateMatrix = scale(translateMatrix, vec3(p[idx - 7].width, p[idx - 7].height, 2));
 	}
 
 	transformMatrix = scaleMatrix * rotateMatrix * translateMatrix;  // 최종 변환
@@ -167,19 +171,20 @@ void modelOutput(int idx) {  // 모델 출력
 		glDrawArrays(GL_TRIANGLES, 0, model_3.size());
 		break;
 
-	case 43: case 44:
+	case 3: case 4:
 		if (cliffEnable) {
 			glBindTexture(GL_TEXTURE_2D, texture[3]);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 		break;
 
-	case 45: case 46:
+	case 5: case 6:
 		glBindTexture(GL_TEXTURE_2D, texture[3]);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		break;
 	}
 
-	if (3 <= idx && idx < 3 + num) {
+	if (6 < idx && idx < num + 7) {
 		glBindTexture(GL_TEXTURE_2D, texture[4]);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}

@@ -9,6 +9,7 @@ extern GLfloat camY;
 bool bgmPlay, bgmStop;
 bool enginePlay, engineStop;
 bool neelingPlay, neelingStop;
+bool cliffPlay;
 int windSoundNum = 0;
 int windSoundNum2 = 0;
 int channelNum = -1;

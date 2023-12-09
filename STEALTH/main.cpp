@@ -8,8 +8,8 @@
 
 
 FMOD::System *ssystem;
-FMOD::Sound *bgm, *engine, *neeling, *wind;
-FMOD::Channel* bgmChannel = 0, * engineChannel = 0, * neelingChannel = 0, * windChannel = 0;
+FMOD::Sound *bgm, *engine, *neeling, *wind, *cliffEnd;
+FMOD::Channel* bgmChannel = 0, * engineChannel = 0, * neelingChannel = 0, * windChannel = 0, *cliffChannel = 0;
 void* extradriverdata = 0;
 FMOD_RESULT result;
 
@@ -54,6 +54,13 @@ void controlSound() {  // 사운드 컨트롤
 		windChannel->stop();
 		ssystem->playSound(wind, 0, false, &windChannel);
 		windSoundNum2++;
+	}
+
+	if (cliffPlay) {
+		cliffChannel->stop();
+		cliffChannel->setVolume(10.0);
+		ssystem->playSound(cliffEnd, 0, false, &cliffChannel);
+		cliffPlay = false;
 	}
 }
 
@@ -110,6 +117,7 @@ void main(int argc, char** argv) {
 		ssystem->createSound("..//res//sounds//engine.ogg", FMOD_LOOP_NORMAL, 0, &engine);
 		ssystem->createSound("..//res//sounds//neeling.ogg", FMOD_LOOP_NORMAL, 0, &neeling);
 		ssystem->createSound("..//res//sounds//wind.ogg", FMOD_DEFAULT, 0, &wind);
+		ssystem->createSound("..//res//sounds//end_of_cliff.ogg", FMOD_DEFAULT, 0, &cliffEnd);
 	}
 
 	// MODEL_COUNT는 config.h에 정의되어있음

@@ -3,11 +3,14 @@
 #include "pillar.h"
 #include "soundController.cpp"
 
-extern GLfloat rot, sx, cz, fov, camRot, camMove, camMove2, gz, camY;
+extern GLfloat rot, sx, cz, fov, camRot, camMove, camMove2, gz, camY, cliffHeight;
 extern GLfloat shakeX, shakeY, shakeZ;
-GLfloat speed = 2;
+
+GLfloat speed = 3;
 GLfloat acc = 0;
 GLfloat deg, deg2;
+GLfloat camAcc = 0.6;
+
 bool rotateRight, rotateLeft; // 각각 오른쪽 회전, 왼쪽 회전
 bool cliffEnable;  // true일 시 절벽이 나타난다
 bool stealthNeeling;  // true 일 시 세로로 기울인다, 조작에 따른 각도 제어 무시
@@ -16,21 +19,19 @@ bool gameUpdate = false;
 bool playWindSound;
 
 int genDelay = 150;  // 장애물 생성 딜레이
-int delay = 80;
-int num = 0;
-int moveDistance = 0;
-int level = 0;
+int delay = 100;  // 다음 장애물 생성 딜레이
+int moveDistance = 0;  // 이동 거리
 
-GLfloat camAcc = 0.6;
+int num = 0;  // 장애물 개수
 
 random_device rd;  mt19937 gen(rd());
-uniform_real_distribution <GLfloat> dis(-9.0f, 9.0f);
+uniform_real_distribution <GLfloat> dis(-7.0f, 7.0f);
 uniform_real_distribution <GLfloat> shake_range(-0.2f, 0.2f);
 uniform_real_distribution <GLfloat> shake_range2(-0.9f, 0.9f);
 uniform_real_distribution <GLfloat> shake_range3(-1.5f, 1.5f);
 
 void init() {
-	delay = 80;
+	delay = 100;
 	genDelay = 150;
 	num = 0;
 	camRot = 0;
@@ -142,38 +143,37 @@ void generatePillar() {
 		genDelay--;
 
 	else {
-		for (int i = 0; i < 2; i++) {
-			if (num < 40) {
-				p[num].x = dis(gen);
-				p[num].z = -80;
-				p[num].height = 0;
-			}
-			num++;
-		}
-		if (num < 40) {  // 벽에 붙어서 피하는 꼼수 방지
-			p[num].x = -9.0;
-			p[num].z = -80;
-			p[num++].height = 0;
-		}
-		
 		if (num < 40) {
-			p[num].x = 9.0;
-			p[num].z = -80;
-			p[num++].height = 0;
+			p[num].x = dis(gen);
+			p[num].z = -180;
+			p[num].height = 0;
+			p[num++].width = 5;
+
+			p[num].x = -9.5;
+			p[num].z = -180;
+			p[num].height = 0;
+			p[num++].width = 2;
+
+			p[num].x = 9.5;
+			p[num].z = -180;
+			p[num].height = 0;
+			p[num++].width = 2;
+
+			genDelay = delay;
 		}
-		genDelay = delay;
 	}
 }
 
 void removePillar(int idx) {
 	if (idx == num)
 		num--;
-	else {
+
+	else if (idx < num) {
 		for (int i = idx; i < num; i++) {
 			p[i].x = p[i + 1].x;
 			p[i].z = p[i + 1].z;
 			p[i].height = p[i + 1].height;
-			p[i].type = p[i + 1].type;
+			p[i].width = p[i + 1].width;
 		}
 		num--;
 	}
@@ -181,26 +181,27 @@ void removePillar(int idx) {
 
 void movePillar() {
 	for (int i = 0; i < num; i++) {
-		p[i].z += speed;
-		p[i].height += 1;
+		if (p[i].z > 40)
+			removePillar(i);
 
 		if (p[i].z == -30)
 			playWindSound = true;
 
-		if (p[i].z > 40)
-			removePillar(i);
+		p[i].z += speed;
+		p[i].height += 1;
 	}
 }
 
 void updateCliff() {
 	cz += speed;
 
-	if (cz + 250 > 250) {
+	if (cz + 400 > 400) {
 		stealthNeeling = true;
 		if (!accSet) {
 			neelingPlay = true;
 			windSoundNum++;
 
+			camAcc = 0.6;
 			num = 0;
 			acc = 1;
 			deg = 0;
@@ -210,13 +211,17 @@ void updateCliff() {
 		}
 	}
 
-	if (cz - 250 > 300) {
+	if (cz - 400 > 450) {
 		neelingStop = true;
 
+		accSet = false;
 		stealthNeeling = false;
 		cliffEnable = false;
+		cliffPlay = true;
+
 		acc = 1;
-		accSet = false;
+		camAcc = 0.6;
+
 		genDelay = 150;
 		if (delay > 10)
 			delay -= 5;
@@ -244,7 +249,7 @@ void shakeDisplay() {
 
 void checkCollision() {
 	for (int i = 0; i < num; i++) {  // 충돌 시 게임이 초기화 된다
-		if ((p[i].x - 1.5 <= sx && sx <= p[i].x + 1.5) && (8 <= p[i].z && p[i].z <= 12)) {
+		if ((p[i].x - p[i].width / 2 - 0.5 <= sx && sx <= p[i].x + p[i].width / 2 + 0.5) && (8 <= p[i].z && p[i].z <= 12)) {
 			camY = -5.0;
 			bgmStop = true;
 			engineStop = true;
@@ -255,30 +260,26 @@ void checkCollision() {
 
 void timerOperation(int value) {
 	if (gameUpdate) {
-		if (camY < 10.0) {
-			camY += camAcc;
-			camAcc -= 0.01;
-			if (camY > 10.0)
-				camY = 10.0;
-		}
-
 		rotateStealth();
 		moveStealth();
-
-		//checkCollision();
 		movePillar();
+		checkCollision();
 
-		if (cliffEnable)
+		if (cliffEnable) {
+			cliffHeight += 0.5;
 			updateCliff();
+		}
 
 		if (!cliffEnable) {
 			moveDistance++;
-			generatePillar();
+			if (moveDistance < 1400)
+				generatePillar();
 		}
 
-		if (moveDistance > 1200 && !cliffEnable) {
+		if (moveDistance > 1500 && !cliffEnable && delay != 10) {
 			moveDistance = 0;
-			cz = -80;
+			cz = -150;
+			cliffHeight = 0;
 			cliffEnable = true;
 		}
 
@@ -289,7 +290,15 @@ void timerOperation(int value) {
 				acc = 0;
 			if (fov > 120)
 				fov = 120;
+
+			if (camY > -5.0) {
+				camY -= camAcc;
+				camAcc -= 0.01;
+				if (camY < -5.0)
+					camY = -5.0;
+			}
 		}
+
 		if (!stealthNeeling) {
 			fov -= acc;
 			acc -= 0.01;
@@ -298,6 +307,14 @@ void timerOperation(int value) {
 				acc = 0;
 			if (fov < 35)
 				fov = 35;
+
+
+			if (camY < 10.0) {
+				camY += camAcc;
+				camAcc -= 0.01;
+				if (camY > 10.0)
+					camY = 10.0;
+			}
 		}
 	}
 
@@ -316,5 +333,6 @@ void timerOperation(int value) {
 	}
 
 	glutTimerFunc(10, timerOperation, 1);
-	glutPostRedisplay();
+	if (glutGetWindow() != 0)
+		glutPostRedisplay();
 }
