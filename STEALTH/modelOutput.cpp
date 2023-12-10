@@ -131,6 +131,7 @@ void setTransform(int idx) {  // 변환 세팅
 	case 3:  // 타이틀, 화면 효과를 받지 않는다
 		translateMatrix = translate(translateMatrix, vec3(-3.25 -shakeX - camMove, -3.0 -shakeY - camMove2, 25.0));
 		translateMatrix = rotate(translateMatrix, radians(-8.0f), vec3(0.0, 1.0, 0.0));
+		translateMatrix = rotate(translateMatrix, radians(-camMove * 2), vec3(0.0, 0.0, 1.0));
 		translateMatrix = scale(translateMatrix, vec3(0.05, 0.05, 0.01));
 		break;
 
