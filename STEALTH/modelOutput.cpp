@@ -30,9 +30,7 @@ GLfloat camRot;
 GLfloat camMove, camMove2;
 GLfloat camZ = 15.0f;
 GLfloat stealthPos = 100.0f;  // to 10.0
-
 GLfloat camY = -5.0;
-
 GLfloat cliffHeight;
 
 extern int num;
@@ -71,7 +69,6 @@ void setCamera() {  // 카메라 세팅
 	cameraDirection = vec3(0.0f, 0.0f, 0.0f);
 	cameraUp = vec3(0.0f, 1.0f, 0.0f);
 	view = lookAt(cameraPos, cameraDirection, cameraUp);
-	view = translate(view, vec3(camMove, camMove2, 0.0));
 	view = rotate(view, radians(-camRot), vec3(0.0, 0.0, 1.0));
 	if(!gameUpdate)
 		view = rotate(view, radians(8.0f), vec3(0.0, 1.0, 0.0));
@@ -86,7 +83,7 @@ void setProjection(int projectionMode) {  // 투영 세팅
 		projection = perspective(radians(fov), ratio, 0.1f, 300.0f);
 		break;
 	case modeOrtho:
-		projection = ortho(-3.0f, 3.0f, -3.0f, 3.0f, 1.0f, 100.0f);
+		projection = ortho(-3.0f, 3.0f, -3.0f, 3.0f, 1.0f, 300.0f);
 		break;
 	}
 }
@@ -109,7 +106,7 @@ void setTransform(int idx) {  // 변환 세팅
 	rotateMatrix = mat4(1.0f);  // 회전 행렬
 	translateMatrix = mat4(1.0f);  // 이동 행렬
 
-	translateMatrix = translate(translateMatrix, vec3(shakeX, shakeY, shakeZ));
+	translateMatrix = translate(translateMatrix, vec3(shakeX + camMove, shakeY + camMove2, shakeZ));
 
 	switch (idx) {  // 변환 추가 
 	case 0:  // 전투기 변환
@@ -129,30 +126,36 @@ void setTransform(int idx) {  // 변환 세팅
 		translateMatrix = rotate(translateMatrix, radians(GLfloat(-90)), vec3(1.0, 0.0, 0.0));
 		break;
 
-	case 3: // 왼쪽 절벽
+	case 3:  // 타이틀
+		translateMatrix = translate(translateMatrix, vec3(-3.25 -shakeX - camMove, -3.0 -shakeY - camMove2, 25.0));
+		translateMatrix = rotate(translateMatrix, radians(-8.0f), vec3(0.0, 1.0, 0.0));
+		translateMatrix = scale(translateMatrix, vec3(0.05, 0.05, 0.01));
+		break;
+
+	case 4: // 왼쪽 절벽
 		translateMatrix = translate(translateMatrix, vec3(-17.0, -5.0, cz - 400));
 		translateMatrix = scale(translateMatrix, vec3(30, cliffHeight, 800));
 		break;
 
-	case 4: // 오른쪽 절벽
+	case 5: // 오른쪽 절벽
 		translateMatrix = translate(translateMatrix, vec3(17.0, -5.0, cz - 400));
 		translateMatrix = scale(translateMatrix, vec3(30, cliffHeight, 800));
 		break;
 
-	case 5:  // 왼쪽벽
+	case 6:  // 왼쪽벽
 		translateMatrix = translate(translateMatrix, vec3(-25.0, 0.0, 0.0));
 		translateMatrix = scale(translateMatrix, vec3(30, 100, 500));
 		break;
 
-	case 6:  // 오른쪽벽
+	case 7:  // 오른쪽벽
 		translateMatrix = translate(translateMatrix, vec3(25.0, 0.0, 0.0));
 		translateMatrix = scale(translateMatrix, vec3(30, 100, 500));
 		break;
 	}
 
-	if (6 < idx && idx < num + 7) {  // 장애물
-		translateMatrix = translate(translateMatrix, vec3(p[idx - 7].x, -10.0, p[idx - 7].z));
-		translateMatrix = scale(translateMatrix, vec3(p[idx - 7].width, p[idx - 7].height, 2));
+	if (7 < idx && idx < num + 8) {  // 장애물
+		translateMatrix = translate(translateMatrix, vec3(p[idx - 8].x, -10.0, p[idx - 8].z));
+		translateMatrix = scale(translateMatrix, vec3(p[idx - 8].width, p[idx - 8].height, 2));
 	}
 
 	transformMatrix = scaleMatrix * rotateMatrix * translateMatrix;  // 최종 변환
@@ -175,20 +178,27 @@ void modelOutput(int idx) {  // 모델 출력
 		glDrawArrays(GL_TRIANGLES, 0, model_3.size());
 		break;
 
-	case 3: case 4:
+	case 3:  // 타이틀 출력
+		if (!gameUpdate) {
+			glBindTexture(GL_TEXTURE_2D, texture[5]);
+			glDrawArrays(GL_TRIANGLES, 0, model_4.size());
+		}
+		break;
+
+	case 4: case 5:
 		if (cliffEnable) {
 			glBindTexture(GL_TEXTURE_2D, texture[3]);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 		break;
 
-	case 5: case 6:
+	case 6: case 7:
 		glBindTexture(GL_TEXTURE_2D, texture[3]);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		break;
 	}
 
-	if (6 < idx && idx < num + 7) {
+	if (7 < idx && idx < num + 8) {
 		glBindTexture(GL_TEXTURE_2D, texture[4]);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}

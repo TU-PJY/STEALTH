@@ -6,10 +6,12 @@
 vector<Vertex> model_1;  // 모델 여러 종류 추가 시 model_2, model_3... 식으로 벡터 추가
 vector<Vertex> model_2;
 vector<Vertex> model_3;
+vector<Vertex> model_4;
 
 GLuint vertexCount_1 = loadObj("..//res//model//stealth.obj", model_1);  // 모델 여러 종류 추가 시 vertexCount_2, vertexCount_3... 식으로 추가
 GLuint vertexCount_2 = loadObj("..//res//model//front.obj", model_2);
 GLuint vertexCount_3 = loadObj("..//res//model//front.obj", model_3);
+GLuint vertexCount_4 = loadObj("..//res//model//title.obj", model_4);
 
 GLfloat vertexData[][48] = {
 	// 앞
@@ -70,7 +72,7 @@ GLfloat vertexData[][48] = {
 
 GLuint VAO[MODEL_COUNT], VBO;  // MODEL_COUNT는 config.h에 정의되어있음
 BITMAPINFO* bmp;
-unsigned int texture[5];
+unsigned int texture[6];
 unsigned char* texture_data;
 
 
@@ -83,11 +85,14 @@ void vertexInput(int idx) {  // vertex
 		glBufferData(GL_ARRAY_BUFFER, model_2.size() * sizeof(Vertex), model_2.data(), GL_STATIC_DRAW);
 		break;
 	case 2:
-		glBufferData(GL_ARRAY_BUFFER, model_2.size() * sizeof(Vertex), model_3.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, model_3.size() * sizeof(Vertex), model_3.data(), GL_STATIC_DRAW);
+		break;
+	case 3:
+		glBufferData(GL_ARRAY_BUFFER, model_4.size() * sizeof(Vertex), model_4.data(), GL_STATIC_DRAW);
 		break;
 	}
 
-	if(3 <= idx && idx <= 46)  // 장애물 및 절벽
+	if(4 <= idx && idx <= 47)  // 장애물 및 절벽
 		glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 }
 
@@ -99,7 +104,7 @@ void setBuffer(int idx) {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	vertexInput(idx);
 
-	if (idx < 3) {  // 전투기, 배경, 땅
+	if (idx < 4) {  // 전투기, 배경, 땅
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position)));
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, normal)));
@@ -214,6 +219,15 @@ void setTexture() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	texture_data = LoadDIBitmap("..//res//texture//texture_pillar.bmp", &bmp);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, 1024, 512, 0, GL_BGR, GL_UNSIGNED_BYTE, texture_data);
+
+	glGenTextures(1, &texture[5]);
+	glBindTexture(GL_TEXTURE_2D, texture[5]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	texture_data = LoadDIBitmap("..//res//texture//texture_title.bmp", &bmp);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, 1024, 512, 0, GL_BGR, GL_UNSIGNED_BYTE, texture_data);
 }
 
