@@ -2,9 +2,7 @@
 #include "gl_func.h"
 #include "soundController.cpp"
 
-extern bool rotateRight, rotateLeft, gameUpdate, overShake;
-extern float shakeTime;
-extern GLfloat camY;
+extern bool rotateRight, rotateLeft, gameUpdate;
 
 bool bgmPlay, bgmStop;  // 사운트 컨트롤러 변수는 여기에 먼저 선언한 뒤에 사용
 bool enginePlay, engineStop;
