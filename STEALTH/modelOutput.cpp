@@ -70,7 +70,7 @@ void setCamera() {  // 카메라 세팅
 
 	view = lookAt(cameraPos, cameraDirection, cameraUp);
 
-	view = rotate(view, radians(-camRot), vec3(0.0, 0.0, 1.0));
+	view = rotate(view, radians(-camRot + camMove * 2), vec3(0.0, 0.0, 1.0));
 	if(!gameUpdate)
 		view = rotate(view, radians(8.0f), vec3(0.0, 1.0, 0.0));
 }

@@ -8,6 +8,7 @@ bool bgmPlay, bgmStop;  // 사운트 컨트롤러 변수는 여기에 먼저 선
 bool enginePlay, engineStop;
 bool neelingPlay, neelingStop;
 bool bgmHomePlay, bgmHomeStop;;
+bool crashPlay;
 bool cliffPlay;
 int windSoundNum = 0;
 int windSoundNum2 = 0;

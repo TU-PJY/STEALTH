@@ -271,6 +271,7 @@ void checkCollision() {
 	for (int i = 0; i < num; i++) {  // 충돌 시 게임이 초기화 된다
 		if ((p[i].x - p[i].width / 2 - 0.5 <= sx && sx <= p[i].x + p[i].width / 2 + 0.5) && (8 <= p[i].z && p[i].z <= 12)) {
 			camY = -5.0;  // 충돌 시 홈 화면으로 돌아간다
+			crashPlay = true;
 			bgmStop = true;
 			bgmHomePlay = true;
 			engineStop = true;
@@ -349,11 +350,20 @@ void timerOperation(int value) {
 		}
 
 		// 카메라 흔들림 효과 2
-		camMove = sin(deg);  // x축 흔들림
-		deg += 0.04;
+		if (!stealthNeeling) {
+			camMove = sin(deg) * 1.5;  // x축 흔들림
+			deg += 0.04;
 
-		camMove2 = sin(deg2);  // y축 흔들림
-		deg2 += 0.02;
+			camMove2 = sin(deg2) * 1.5;  // y축 흔들림
+			deg2 += 0.02;
+		}
+		if (stealthNeeling) {
+			camMove = sin(deg);  // x축 흔들림
+			deg += 0.04;
+
+			camMove2 = sin(deg2);  // y축 흔들림
+			deg2 += 0.02;
+		}
 	}
 
 	// 홈 화면일 때 아래의 코드 동작

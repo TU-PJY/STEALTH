@@ -8,8 +8,8 @@
 
 
 FMOD::System *ssystem;
-FMOD::Sound *bgm, *engine, *neeling, *wind, *cliffEnd, *bgmHome;
-FMOD::Channel* bgmChannel = 0, *bgmHomeChannel = 0, * engineChannel = 0, * neelingChannel = 0, * windChannel = 0, *cliffChannel = 0;
+FMOD::Sound *bgm, *engine, *neeling, *wind, *cliffEnd, *bgmHome, *crash;
+FMOD::Channel* bgmChannel = 0, *bgmHomeChannel = 0, * engineChannel = 0, * neelingChannel = 0, * windChannel = 0, *cliffChannel = 0, *crashChannel = 0;
 void* extradriverdata = 0;
 FMOD_RESULT result;
 
@@ -23,6 +23,7 @@ void controlSound() {  // 사운드 컨트롤
 	if (bgmPlay) {
 		bgmChannel->stop();
 		ssystem->playSound(bgm, 0, false, &bgmChannel);
+		bgmChannel->setVolume(0.7);
 		bgmPlay = false;
 	}
 	if (bgmStop) {
@@ -33,6 +34,7 @@ void controlSound() {  // 사운드 컨트롤
 	if (bgmHomePlay) {
 		bgmHomeChannel->stop();
 		ssystem->playSound(bgmHome, 0, false, &bgmHomeChannel);
+		bgmHomeChannel->setVolume(0.6);
 		bgmHomePlay = false;
 	}
 	if (bgmHomeStop) {
@@ -43,6 +45,7 @@ void controlSound() {  // 사운드 컨트롤
 	if (enginePlay) {
 		engineChannel->stop();
 		ssystem->playSound(engine, 0, false, &engineChannel);
+		engineChannel->setVolume(0.6);
 		enginePlay = false;
 	}
 	if (engineStop) {
@@ -53,6 +56,7 @@ void controlSound() {  // 사운드 컨트롤
 	if (neelingPlay) {
 		neelingChannel->stop();
 		ssystem->playSound(neeling, 0, false, &neelingChannel);
+		neelingChannel->setVolume(0.6);
 		neelingPlay = false;
 	}
 	if (neelingStop) {
@@ -63,14 +67,22 @@ void controlSound() {  // 사운드 컨트롤
 	if (windSoundNum != windSoundNum2) {  // 앞 번호와 뒤 번호가 다를때만 재생한다
 		windChannel->stop();
 		ssystem->playSound(wind, 0, false, &windChannel);
+		windChannel->setVolume(0.5);
+
 		windSoundNum2++;  // 뒤 번호 갱신
 	}
 
 	if (cliffPlay) {
 		cliffChannel->stop();
-		cliffChannel->setVolume(10.0);
 		ssystem->playSound(cliffEnd, 0, false, &cliffChannel);
+		cliffChannel->setVolume(1.0);
 		cliffPlay = false;
+	}
+
+	if (crashPlay) {
+		crashChannel->stop();
+		ssystem->playSound(crash, 0, false, &crashChannel);
+		crashPlay = false;
 	}
 }
 
@@ -129,8 +141,10 @@ void main(int argc, char** argv) {
 		ssystem->createSound("..//res//sounds//wind.ogg", FMOD_DEFAULT, 0, &wind);
 		ssystem->createSound("..//res//sounds//end_of_cliff.ogg", FMOD_DEFAULT, 0, &cliffEnd);
 		ssystem->createSound("..//res//sounds//home_bgm.ogg", FMOD_DEFAULT, 0, &bgmHome);
+		ssystem->createSound("..//res//sounds//crash.ogg", FMOD_DEFAULT, 0, &crash);
 
 		ssystem->playSound(bgmHome, 0, false, &bgmHomeChannel);
+		bgmHomeChannel->setVolume(0.7);
 	}
 
 	// MODEL_COUNT는 config.h에 정의되어있음
