@@ -191,7 +191,7 @@ void modelOutput(int idx) {  // 모델 출력
 
 	case 4: case 5:  // 절벽 출력
 		if (cliffEnable) {
-			glBindTexture(GL_TEXTURE_2D, texture[3]);
+			glBindTexture(GL_TEXTURE_2D, texture[2]);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 		break;
