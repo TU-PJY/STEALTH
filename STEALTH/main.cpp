@@ -60,10 +60,10 @@ void controlSound() {  // 사운드 컨트롤
 		neelingStop = false;
 	}
 
-	if (windSoundNum != windSoundNum2) {
+	if (windSoundNum != windSoundNum2) {  // 앞 번호와 뒤 번호가 다를때만 재생한다
 		windChannel->stop();
 		ssystem->playSound(wind, 0, false, &windChannel);
-		windSoundNum2++;
+		windSoundNum2++;  // 뒤 번호 갱신
 	}
 
 	if (cliffPlay) {

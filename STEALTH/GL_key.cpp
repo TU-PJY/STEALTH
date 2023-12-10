@@ -6,7 +6,7 @@ extern bool rotateRight, rotateLeft, gameUpdate, overShake;
 extern float shakeTime;
 extern GLfloat camY;
 
-bool bgmPlay, bgmStop;
+bool bgmPlay, bgmStop;  // 사운트 컨트롤러 변수는 여기에 먼저 선언한 뒤에 사용
 bool enginePlay, engineStop;
 bool neelingPlay, neelingStop;
 bool bgmHomePlay, bgmHomeStop;;
@@ -19,13 +19,14 @@ void keyDown(unsigned char KEY, int x, int y) {
 	case 27:  // ESC
 		glutDestroyWindow(1);
 		break;
-	case 32:
-		if (!gameUpdate) {
-			bgmPlay = true;  // 사운드 on
-			bgmHomeStop = true;  // 사운도 off
 
-			enginePlay = true;
-			gameUpdate = true;
+	case 32:  // 스페이스바 눌러 게임 시작
+		if (!gameUpdate) {
+			bgmPlay = true;  // 인게임 브금 on
+			bgmHomeStop = true;  // 홈 사운드 off
+
+			enginePlay = true;  // 엔진사운드 on
+			gameUpdate = true;  // 게임 업데이트를 시작한다
 		}
 		break;
 	}
