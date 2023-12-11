@@ -200,7 +200,7 @@ void movePillar() {
 			playWindSound = true;
 
 		p[i].z += speed;  // 전투기 속도로 장애물이 다가온다(화면 상에서)
-		p[i].height += 0.5;  // 장애물 높이가 점차 높아진다
+		p[i].height += 0.35;  // 장애물 높이가 점차 높아진다
 	}
 }
 
