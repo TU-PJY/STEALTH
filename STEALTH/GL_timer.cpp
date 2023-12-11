@@ -200,7 +200,7 @@ void movePillar() {
 			playWindSound = true;
 
 		p[i].z += speed;  // 전투기 속도로 장애물이 다가온다(화면 상에서)
-		p[i].height += 1;  // 장애물 높이가 점차 높아진다
+		p[i].height += 0.5;  // 장애물 높이가 점차 높아진다
 	}
 }
 
@@ -236,8 +236,8 @@ void updateCliff() {
 		camAcc = 0.6;  // 카메라 가속도 설정
 
 		genDelay = 150;  // 곧바로 장애물이 나오지 않도록 장애물 생성 딜레이를 조금 길게 설정
-		if (delay > 10)  // 딜레이가 10인 상태에서는 더 이상 딜레이가 줄어들지 않는다.
-			delay -= 5;  // 다음 장애물 생성 딜레이를 설정한다
+		if (delay > 20)  // 딜레이가 10인 상태에서는 더 이상 딜레이가 줄어들지 않는다.
+			delay -= 10;  // 다음 장애물 생성 딜레이를 설정한다
 	}
 }
 
@@ -297,16 +297,17 @@ void timerOperation(int value) {
 		}
 
 		if (!cliffEnable) { 
-			moveDistance++;  // 거리를 측정한다
+			if(delay > 10)
+				moveDistance++;  // 거리를 측정한다
 			// 절벽 근처에 가면 더 이상 장애물이 생성되지 않는다. (절벽 바로 앞이나 내부에 생성 방지)
 			// 딜레이가 10일때는 무한으로 장애물이 생성된다
-			if (moveDistance < 1400 && delay != 10)  
+			if (moveDistance < 1400)  
 				generatePillar();
 		}
 
 		// 절벽 위치에 다다르면 절벽을 지날 준비를 한다
 		// 딜레이가 10일때는 더 이상 절벽이 나오지 않고 무한으로 장애물이 생성된다
-		if (moveDistance > 1500 && !cliffEnable && delay != 10) {
+		if (moveDistance > 1500 && !cliffEnable && delay > 10) {
 			moveDistance = 0;  
 			cz = -150;
 			cliffHeight = 0;
