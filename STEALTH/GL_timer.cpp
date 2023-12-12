@@ -123,12 +123,12 @@ void rotateStealth() {
 void moveStealth() {
 	if (!stealthNeeling) {
 		if (rotateRight) {  // 오른쪽 이동
-			sx += 0.5;
+			sx += 0.4;
 			if (sx > 9)
 				sx = 9;
 		}
 		if (rotateLeft) {  // 왼쪽 이동
-			sx -= 0.5;
+			sx -= 0.4;
 			if (sx < -9)
 				sx = -9;
 		}
